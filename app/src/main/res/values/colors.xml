@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#FF000000</color>
+    <color name="FondoApp">#FFFFFFFF</color>
+    <color name="low_gray">#8452CA</color>
+    <color name="col2">#86E7B8</color>
+    <color name="fondo">#1c2334</color>
+    <color name="fondo2">#FBFBFB</color>
+    <color name="color_letra">#BDE8D3</color>
+    <color name="color_boton">#C410D6</color>
+    <color name="orange">#FF5722</color>
+    <color name="title_binding">#FF9800</color>
+    <color name="amarillo">#F1B912</color>
+    <color name="search_bg">#00BCD4</color>
+    <color name="TitulosColor">#FE5F6B</color>
+    <color name="plomo">#7C7C7C</color>
+    <color name="face">#23599A</color>
+    <color name="bird">#00A1F4</color>
+</resources>

@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">Pruebaxd</string>
+    <string name="titulo">Pedidos Online</string>
+    <string name="saludo">Hola, es bueno verte otra vez</string>
+
+
+
+    <string name="pepe">Cancelar</string>
+
+</resources>
