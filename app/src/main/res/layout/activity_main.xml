@@ -11,20 +11,20 @@
         style="@style/titulos"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="444dp"
         android:text="@string/titulo"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintHorizontal_bias="0.232"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/logo" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.34" />
 
     <ImageView
         android:id="@+id/logo"
-        android:layout_width="175dp"
-        android:layout_height="186dp"
+        android:layout_width="167dp"
+        android:layout_height="170dp"
 
-        android:layout_marginTop="36dp"
+        android:layout_marginTop="40dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -35,9 +35,10 @@
         style="@style/subTitulos"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="36dp"
+        android:layout_marginTop="16dp"
         android:text="@string/saludo"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.502"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/titulo" />
 
@@ -46,10 +47,10 @@
         style="@style/titulosLogin"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="24dp"
         android:text="Correo"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.271"
+        app:layout_constraintHorizontal_bias="0.161"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/bienvenida" />
 
@@ -57,11 +58,12 @@
         android:id="@+id/ejemploCorreo"
         style="@style/titulosEjemplo"
 
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="100dp"
-        android:layout_marginTop="20dp"
+        android:layout_width="209dp"
+        android:layout_height="39dp"
+        android:layout_marginTop="12dp"
         android:hint="ejemplo@gmail.com"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.396"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/correo" />
 
@@ -70,24 +72,34 @@
         style="@style/titulosLogin"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="100dp"
         android:layout_marginTop="16dp"
         android:text="Contraseña"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.167"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/ejemploCorreo" />
 
-    <EditText
-        android:id="@+id/ejemplo_key"
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/clave"
         style="@style/titulosEjemplo"
-        android:layout_width="185dp"
-        android:layout_height="41dp"
-        android:layout_marginStart="100dp"
-        android:layout_marginTop="20dp"
-        android:drawableRight="@drawable/baseline_remove_red_eye_24"
-        android:drawableTint="#CFD6D8"
-        android:hint="*******"
+        android:layout_width="216dp"
+
+        android:layout_height="58dp"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/contraseña" />
+        app:layout_constraintTop_toBottomOf="@+id/contraseña"
+        app:passwordToggleEnabled="true">
+
+        <EditText
+            android:id="@+id/ejemplo_key"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="16dp"
+            android:hint="password"
+
+
+            />
+    </com.google.android.material.textfield.TextInputLayout>
 
     <Button
         android:id="@+id/ingresar"
@@ -100,19 +112,21 @@
         app:cornerRadius="10dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/ejemplo_key" />
+        app:layout_constraintTop_toBottomOf="@+id/clave" />
+
 
     <Button
         android:id="@+id/Twitter"
         style="@style/botones"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="72dp"
-        android:layout_marginBottom="12dp"
+        android:layout_marginTop="16dp"
         android:backgroundTint="@color/bird"
         android:text="Twitter"
         app:cornerRadius="10dp"
-        app:layout_constraintBottom_toTopOf="@+id/olvido"
+        android:drawableLeft="@drawable/logo_twitter30"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.188"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/opcion" />
 
@@ -121,16 +135,15 @@
         style="@style/botones"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="20dp"
+        android:layout_marginTop="16dp"
         android:backgroundTint="@color/face"
         android:text="Facebook"
         app:cornerRadius="10dp"
-        app:layout_constraintBottom_toTopOf="@+id/registro"
+        android:drawableLeft="@drawable/logo_facebook30"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.537"
+        app:layout_constraintHorizontal_bias="0.54"
         app:layout_constraintStart_toEndOf="@+id/Twitter"
         app:layout_constraintTop_toBottomOf="@+id/opcion" />
-
 
     <TextView
         android:id="@+id/opcion"
@@ -147,11 +160,12 @@
         style="@style/subTitulos"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="56dp"
-        android:layout_marginBottom="28dp"
+        android:layout_marginTop="20dp"
         android:text="¿Olvido su contraseña?"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.227"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/Twitter" />
 
     <TextView
         android:id="@+id/registro"
@@ -159,9 +173,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="64dp"
-        android:layout_marginBottom="24dp"
+        android:layout_marginTop="20dp"
         android:text="Registrese"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/olvido" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@+id/olvido"
+        app:layout_constraintTop_toBottomOf="@+id/Facebook" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
