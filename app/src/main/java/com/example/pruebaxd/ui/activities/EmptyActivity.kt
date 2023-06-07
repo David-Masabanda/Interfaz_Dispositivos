@@ -4,6 +4,8 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import androidx.core.view.get
+import com.example.pruebaxd.R
 import com.example.pruebaxd.databinding.ActivityEmptyBinding
 import com.google.android.material.snackbar.Snackbar
 
@@ -21,7 +23,7 @@ class EmptyActivity : AppCompatActivity() {
         var name:String=""
         intent.extras.let {
             // it.toString()
-            name= it?.getString("var2")!!
+           // name= it?.getString("var2")!!
         }
         Log.d("UCE","Hola${name}")
         binding.textView.text="Bienvenido "+name.toString()
@@ -30,6 +32,7 @@ class EmptyActivity : AppCompatActivity() {
         initClass()
     }
     private fun initClass(){
+
         binding.button3.setOnClickListener{
             /*
             var f = Snackbar.make(
@@ -44,6 +47,36 @@ class EmptyActivity : AppCompatActivity() {
             )
             //   intent.putExtra("var1","Juan")
             startActivity(intent)
+        }
+        binding.bottomNavigation.setOnItemSelectedListener {
+                item ->
+            when(item.itemId) {
+                R.id.option_1 -> {
+                    // Respond to navigation item 1 click
+                    binding.button3.text="Hola"
+                    binding.textView.text="Estatus"
+                    true
+                }
+                R.id.option_2 -> {
+                    // Respond to navigation item 2 click
+                    Snackbar.make(
+                        binding.bottomNavigation,
+                        "Esta Vivo",
+                        Snackbar.LENGTH_SHORT
+                    )
+                        .show()
+                    true
+                }
+                R.id.option_3 -> {
+                    // Respond to navigation item 2 click
+                    var intent = Intent(this,MainActivity::class.java
+                    )
+                    //   intent.putExtra("var1","Juan")
+                    startActivity(intent)
+                    true
+                }
+                else -> false
+            }
         }
     }
 }

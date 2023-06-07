@@ -6,5 +6,7 @@
 
 
     <string name="pepe">Cancelar</string>
-
+    <string name="Favoritos">Favoritos</string>
+    <string name="Inicio">Inicio</string>
+    <string name="APIs">APIs</string>
 </resources>
