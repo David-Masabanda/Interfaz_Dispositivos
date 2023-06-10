@@ -4,9 +4,10 @@
     <string name="saludo">Hola, es bueno verte otra vez</string>
 
 
-
     <string name="pepe">Cancelar</string>
     <string name="Favoritos">Favoritos</string>
     <string name="Inicio">Inicio</string>
     <string name="APIs">APIs</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

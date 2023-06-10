@@ -7,6 +7,7 @@ import android.util.Log
 import androidx.core.view.get
 import com.example.pruebaxd.R
 import com.example.pruebaxd.databinding.ActivityEmptyBinding
+import com.example.pruebaxd.ui.fragments.FirstFragment
 import com.google.android.material.snackbar.Snackbar
 
 class EmptyActivity : AppCompatActivity() {
@@ -53,8 +54,15 @@ class EmptyActivity : AppCompatActivity() {
             when(item.itemId) {
                 R.id.option_1 -> {
                     // Respond to navigation item 1 click
-                    binding.button3.text="Hola"
-                    binding.textView.text="Estatus"
+//                    binding.button3.text="Hola"
+//                    binding.textView.text="Estatus"
+
+                    val frag=FirstFragment()
+                    val transacction=supportFragmentManager.beginTransaction()
+                    transacction.add(binding.frm.id, frag)
+                    transacction.addToBackStack(null)
+                    transacction.commit()
+
                     true
                 }
                 R.id.option_2 -> {
