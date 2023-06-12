@@ -8,6 +8,8 @@ import androidx.core.view.get
 import com.example.pruebaxd.R
 import com.example.pruebaxd.databinding.ActivityEmptyBinding
 import com.example.pruebaxd.ui.fragments.FirstFragment
+import com.example.pruebaxd.ui.fragments.SecondFragment
+import com.example.pruebaxd.ui.fragments.ThirdFragment
 import com.google.android.material.snackbar.Snackbar
 
 class EmptyActivity : AppCompatActivity() {
@@ -66,21 +68,40 @@ class EmptyActivity : AppCompatActivity() {
                     true
                 }
                 R.id.option_2 -> {
+
+                    val frag2=SecondFragment()
+                    val transaccion2=supportFragmentManager.beginTransaction()
+                    transaccion2.add(binding.frm.id,frag2)
+                    transaccion2.addToBackStack(null)
+                    transaccion2.commit()
+
+
+
                     // Respond to navigation item 2 click
-                    Snackbar.make(
-                        binding.bottomNavigation,
-                        "Esta Vivo",
-                        Snackbar.LENGTH_SHORT
-                    )
-                        .show()
+//                    Snackbar.make(
+//                        binding.bottomNavigation,
+//                        "Esta Vivo",
+//                        Snackbar.LENGTH_SHORT
+//                    )
+//                        .show()
                     true
                 }
                 R.id.option_3 -> {
-                    // Respond to navigation item 2 click
-                    var intent = Intent(this,MainActivity::class.java
-                    )
-                    //   intent.putExtra("var1","Juan")
-                    startActivity(intent)
+
+
+                    val frag3=ThirdFragment()
+                    val transaccion3=supportFragmentManager.beginTransaction()
+                    transaccion3.add(binding.frm.id,frag3)
+                    transaccion3.addToBackStack(null)
+                    transaccion3.commit()
+
+
+
+//                    // Respond to navigation item 2 click
+//                    var intent = Intent(this,MainActivity::class.java
+//                    )
+//                    //   intent.putExtra("var1","Juan")
+//                    startActivity(intent)
                     true
                 }
                 else -> false
