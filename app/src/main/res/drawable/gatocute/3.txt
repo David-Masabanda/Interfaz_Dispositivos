@@ -1,0 +1,34 @@
+clase 3
+Requerimientos no funcionales
+	Son caracteristicas q el usuario expera implicitamente	
+
+Atributos de calidad
+	Va a afectar la arquitectura de software dependiendo de su caracteristica
+	
+Importancia de loa atrubutos de calidad
+	Se debe poner medir, comprobar el tipo de calidad, es importante ya q con esto se puedo seguir optimiazando el sotfware
+	
+	Se clasifican en:
+		Perfomance (Velocidad).-Esta ligado a la cantidad de usuairos
+			    SLA.-Es un acuerdo escrito entre un proveedor de servicio y su cliente con objeto de fijar el nivel 	
+			    acordado para la calidad de dicho servicio.SLA es una herramienta que ayuda  a  ambas  partes 
+			    a  llegar  a  un  consenso  en términos del nivel de calidad del servicio, en aspectos tales   
+                            como   tiempo de   respuesta,   disponibilidad horaria, documentación disponible, personal 
+			    asignado al servicio, etc
+			Latencia.-Es el tiempo q transcurre desdew q se envia una peticion al sistema hasta q se recibe el 1er bit de resp
+			Determinar  la  causa  por  las  que  un  sistema  tiene  mal  performance  puede  ser complicado,  ya  que  
+			existen  muchas  razones  que  lo  puedenprovocar,  como  la latencia,  operaciones  de  lectura  y  escritura,  
+			velocidad  de  red/internet,  servicios externos, sobre carga de usuarios/procesos, hardware, etc. 
+				Usuarios: Todas las aplicaciones deber ser diseñados para soportar una cierta cantidad de usuarios 
+				simultaneos, asi como el creciemiento a lo largo del tiempo, no tomar en cuenta estos aspectos puede
+				convellar a tener serios problemas de rendimiento q va a empeorando con el tiempo
+				Mensaje: 
+				Internet: 
+				Logs: Guardan toda la informacion del usuario 
+				Cache: es  un  componente  de  hardware  o  software que almacena datos para que las solicitudes futuras 
+				de esos datos se puedan atender con mayor rapidez; los datos   almacenados   en   un   caché   
+				pueden   ser   el resultado  de  un  cálculo  anterior  o  el  duplicado  de datos  almacenados  
+				en  otro  lugar,  generalmente,  da velocidad de acceso más rápido.
+		Seguridad: +
+
+Pag 98	

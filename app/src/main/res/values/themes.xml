@@ -49,4 +49,7 @@
     </style>
 
     <style name="Theme.Pruebaxd" parent="Base.Theme.Pruebaxd" />
+    <style name="ActiveIndicator" parent="Widget.Material3.BottomNavigationView.ActiveIndicator">
+        <item name="android:color">@color/low_gray</item>
+    </style>
 </resources>
