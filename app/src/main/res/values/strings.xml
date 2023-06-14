@@ -1,4 +1,4 @@
-<resources>
+<string>
     <string name="app_name">Pruebaxd</string>
     <string name="titulo">Pedidos Online</string>
     <string name="saludo">Hola, es bueno verte otra vez</string>
@@ -10,4 +10,13 @@
     <string name="APIs">APIs</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
-</resources>
+
+
+
+
+
+
+
+
+
+</string>

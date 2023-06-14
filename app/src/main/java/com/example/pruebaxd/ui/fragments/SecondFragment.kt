@@ -31,13 +31,15 @@ class SecondFragment : Fragment() {
     override fun onStart() {
         super.onStart()
         val nombres = arrayListOf<String>("Sebitas", "Jaime", "Tamarita", "Deivid", "Luci")
+
         val adapter=ArrayAdapter<String>(
             requireActivity(),
            /*android.R.layout.simple_spinner_item, */
             R.layout.simple_layout,
             nombres)
+
         binding.spinn.adapter=adapter
-        binding.list2.adapter=adapter
+        //binding.list2.adapter=adapter
     }
 
 
