@@ -2,7 +2,9 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content"
+    >
+
 
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
@@ -15,8 +17,10 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/tarjeta"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:background="@drawable/gradiente">
 
             <ImageView
                 android:id="@+id/imagen"
@@ -33,6 +37,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="32dp"
                 android:text="Marvel"
+                android:textColor="@color/FondoApp"
                 android:textSize="16sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.283"
@@ -45,6 +50,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="32dp"
                 android:textSize="16sp"
+                android:textColor="@color/FondoApp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.652"
                 app:layout_constraintStart_toEndOf="@+id/imagen"

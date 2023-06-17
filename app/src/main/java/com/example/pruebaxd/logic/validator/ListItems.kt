@@ -21,13 +21,13 @@ class ListItems {
                 1,
                 "Wolverine",
                 "The Uncanny X-Men",
-                "https://comicvine.gamespot.com/images/1300-8089429"
+                "https://comicvine.gamespot.com/a/uploads/original/4/46529/8089182-783_1000%283%29.jpg"
             ),
             MarvelPersonajes(
                 2,
                 "Spiderman",
                 "The Amazing Spider Man",
-                "https://comicvine.gamespot.com/a/uploads/scale_small/12/124259/8126579-amazing_spider-man_vol_5_54_stormbreakers_variant_textless.jpg"
+                "https://comicvine.gamespot.com/a/uploads/scale_large/6/67663/4851257-01.jpg"
             ),
             MarvelPersonajes(
                 3,
@@ -45,7 +45,7 @@ class ListItems {
                 5,
                 "Iron Man",
                 "Superior Iron Man",
-                "https://comicvine.gamespot.com/images/1300-7770286"
+                "https://comicvine.gamespot.com/a/uploads/scale_small/12/124259/8654427-ezgif-1-2f113089e4.jpg"
             )
         )
 

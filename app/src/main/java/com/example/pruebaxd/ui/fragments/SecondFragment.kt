@@ -8,8 +8,12 @@ import android.view.ViewGroup
 import android.widget.Adapter
 import android.widget.ArrayAdapter
 import android.widget.SimpleAdapter
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView.LayoutManager
 import com.example.pruebaxd.R
 import com.example.pruebaxd.databinding.FragmentSecondBinding
+import com.example.pruebaxd.logic.validator.ListItems
+import com.example.pruebaxd.ui.adapters.MarvelAdapter
 
 
 class SecondFragment : Fragment() {
@@ -38,8 +42,22 @@ class SecondFragment : Fragment() {
             R.layout.simple_layout,
             nombres)
 
-        binding.spinn.adapter=adapter
+       // binding.spinn.adapter=adapter
         //binding.list2.adapter=adapter
+
+
+
+
+        val rvAdapter=MarvelAdapter(ListItems().returnMarvelChars())
+        val rvMarvel=binding.rvMarvel
+
+        rvMarvel.adapter=rvAdapter
+        rvMarvel.layoutManager=LinearLayoutManager(
+            requireActivity(),
+            LinearLayoutManager.VERTICAL,
+            false)
+
+
     }
 
 
