@@ -10,21 +10,33 @@ import com.example.pruebaxd.databinding.MarvelCharactersBinding
 import com.google.android.material.snackbar.Snackbar
 import com.squareup.picasso.Picasso
 
-class MarvelAdapter(private val items:List<MarvelPersonajes>):
+class MarvelAdapter(
+    private val items:List<MarvelPersonajes>,
+    private var fnClick:(MarvelPersonajes)->Unit
+    ):
+
+
+
     RecyclerView.Adapter<MarvelAdapter.MarvelViewHolder>() {
 
+    //Unit significa que es una funcion q no devuelve nada, como el void en un metodo de java
     class MarvelViewHolder (view: View) : RecyclerView.ViewHolder(view){
 
         private val binding:MarvelCharactersBinding=MarvelCharactersBinding.bind(view)
 
-        fun render(item : MarvelPersonajes){
-            println("Recibiendo a ${item.nombre}")
+        fun render(item : MarvelPersonajes, fnClick:(MarvelPersonajes)->Unit){
+//            println("Recibiendo a ${item.nombre}")
+
+
             Picasso.get().load(item.imagen).into(binding.imagen)
             binding.nombre.text=item.nombre
             binding.comic.text=item.comic
 
-            binding.tarjeta.setOnClickListener{
-                Snackbar.make(binding.imagen, item.nombre, Snackbar.LENGTH_SHORT).show()
+            //itemView se refiere a cualquier parte del elemento
+            itemView.setOnClickListener{
+               //De la clase anterior
+                // Snackbar.make(binding.imagen, item.nombre, Snackbar.LENGTH_SHORT).show()
+                fnClick(item)
             }
 
         }
@@ -40,7 +52,7 @@ class MarvelAdapter(private val items:List<MarvelPersonajes>):
     }
 
     override fun onBindViewHolder(holder: MarvelAdapter.MarvelViewHolder, position: Int) {
-        holder.render(items[position])
+        holder.render(items[position],fnClick)
     }
 
     override fun getItemCount(): Int=items.size

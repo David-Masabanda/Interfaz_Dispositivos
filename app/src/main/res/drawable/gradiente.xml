@@ -4,7 +4,7 @@
     <item>
         <shape>
             <gradient android:angle="180"
-                android:startColor="@color/face"
+                android:startColor="@color/hola"
                 android:endColor="@color/plomo"
                 android:type="sweep">
 
