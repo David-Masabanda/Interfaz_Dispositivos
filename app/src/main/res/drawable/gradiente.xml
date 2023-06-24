@@ -6,7 +6,7 @@
             <gradient android:angle="180"
                 android:startColor="@color/hola"
                 android:endColor="@color/plomo"
-                android:type="sweep">
+                android:type="linear">
 
             </gradient>
         </shape>

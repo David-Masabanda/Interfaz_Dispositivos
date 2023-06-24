@@ -50,7 +50,6 @@ class DetailsMarvelItem : AppCompatActivity() {
             binding.textoMarvel.text=item.nombre
             binding.comicMarvel.text=item.comic
             Picasso.get().load(item.imagen).into(binding.imagenMarvel)
-            binding.resumenTexto.text=item.resumen
         }
 
 

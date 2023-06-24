@@ -10,5 +10,6 @@ data class MarvelPersonajes (
     val nombre: String,
     val comic: String,
     val imagen: String,
-    val resumen: String,
+
+
 ): Parcelable

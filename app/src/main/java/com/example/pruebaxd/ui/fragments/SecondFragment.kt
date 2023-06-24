@@ -9,15 +9,21 @@ import android.view.ViewGroup
 import android.widget.Adapter
 import android.widget.ArrayAdapter
 import android.widget.SimpleAdapter
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView.LayoutManager
 import com.example.pruebaxd.R
+import com.example.pruebaxd.data.entities.jikan.JikanAnimeEntity
 import com.example.pruebaxd.data.marvel.MarvelPersonajes
 import com.example.pruebaxd.databinding.FragmentSecondBinding
+import com.example.pruebaxd.logic.JikanLogic.JikanAnimeLogic
 import com.example.pruebaxd.logic.validator.ListItems
 import com.example.pruebaxd.ui.activities.DetailsMarvelItem
 import com.example.pruebaxd.ui.activities.MainActivity
 import com.example.pruebaxd.ui.adapters.MarvelAdapter
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 
 class SecondFragment : Fragment() {
@@ -85,20 +91,27 @@ class SecondFragment : Fragment() {
     }
 
     fun chargeDataRV(){
-        val rvAdapter=MarvelAdapter(
-            ListItems().returnMarvelChars()
-        ) { sendMarvelItem(it) }
 
+        lifecycleScope.launch(Dispatchers.IO){
+            val rvAdapter=MarvelAdapter(
+//            ListItems().returnMarvelChars()
+                JikanAnimeLogic().getAllAnimes()
+            ) { sendMarvelItem(it) }
 
-        val rvMarvel=binding.rvMarvel
-        with(rvMarvel){
-            rvMarvel.adapter=rvAdapter
-            rvMarvel.layoutManager=LinearLayoutManager(
-                requireActivity(),
-                LinearLayoutManager.VERTICAL,
-                false)
+            withContext(Dispatchers.Main){
+                with(binding.rvMarvel){
+                    this.adapter=rvAdapter
+                    this.layoutManager=LinearLayoutManager(
+                        requireActivity(),
+                        LinearLayoutManager.VERTICAL,
+                        false)
+
+                }
+            }
 
         }
+
+
     }
 
 
