@@ -17,6 +17,7 @@ import com.example.pruebaxd.data.entities.jikan.JikanAnimeEntity
 import com.example.pruebaxd.data.marvel.MarvelPersonajes
 import com.example.pruebaxd.databinding.FragmentSecondBinding
 import com.example.pruebaxd.logic.JikanLogic.JikanAnimeLogic
+import com.example.pruebaxd.logic.marvelLogic.MarvelLogic
 import com.example.pruebaxd.logic.validator.ListItems
 import com.example.pruebaxd.ui.activities.DetailsMarvelItem
 import com.example.pruebaxd.ui.activities.MainActivity
@@ -95,7 +96,7 @@ class SecondFragment : Fragment() {
         lifecycleScope.launch(Dispatchers.IO){
             val rvAdapter=MarvelAdapter(
 //            ListItems().returnMarvelChars()
-                JikanAnimeLogic().getAllAnimes()
+                MarvelLogic().getAllAnimes("spider",5)
             ) { sendMarvelItem(it) }
 
             withContext(Dispatchers.Main){

@@ -7,10 +7,11 @@ import com.example.pruebaxd.data.marvel.MarvelPersonajes
 class JikanAnimeLogic {
 
     suspend fun getAllAnimes():List<MarvelPersonajes>{
-        var call=ApiConnection.getJikanConnection()
-        val response=call.create(JikanEndPoint::class.java).getAllAnimes()
 
         var itemList= arrayListOf<MarvelPersonajes>()
+
+        var response=ApiConnection.getService(ApiConnection.TypeApi.Jikan,JikanEndPoint::class.java).getAllAnimes()
+
 
         //Compruebo si la respuesta se ejecuto
         if (response.isSuccessful){
