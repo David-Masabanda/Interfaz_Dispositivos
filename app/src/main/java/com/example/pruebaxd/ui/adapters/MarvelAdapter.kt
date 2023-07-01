@@ -11,7 +11,7 @@ import com.google.android.material.snackbar.Snackbar
 import com.squareup.picasso.Picasso
 
 class MarvelAdapter(
-    private val items:List<MarvelPersonajes>,
+    private var items:List<MarvelPersonajes>,
     private var fnClick:(MarvelPersonajes)->Unit
     ):
 
@@ -57,7 +57,10 @@ class MarvelAdapter(
 
     override fun getItemCount(): Int=items.size
 
-
+    fun updateListItems(newItems:List<MarvelPersonajes>){
+        this.items=this.items.plus(newItems)
+        notifyDataSetChanged()
+    }
 
 
 }

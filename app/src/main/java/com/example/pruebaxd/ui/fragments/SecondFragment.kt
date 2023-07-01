@@ -11,6 +11,7 @@ import android.widget.ArrayAdapter
 import android.widget.SimpleAdapter
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.LayoutManager
 import com.example.pruebaxd.R
 import com.example.pruebaxd.data.entities.jikan.JikanAnimeEntity
@@ -31,6 +32,9 @@ class SecondFragment : Fragment() {
 
     private lateinit var binding: FragmentSecondBinding
 
+    private lateinit var lmanager:LinearLayoutManager
+    private lateinit var rvAdapter:MarvelAdapter
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -39,6 +43,10 @@ class SecondFragment : Fragment() {
         binding = FragmentSecondBinding.inflate(
             layoutInflater, container, false
         )
+        lmanager=LinearLayoutManager(
+            requireActivity(),
+            LinearLayoutManager.VERTICAL,
+            false)
 
         return binding.root
     }
@@ -71,13 +79,40 @@ class SecondFragment : Fragment() {
 //
 //        }
 
-        chargeDataRV()
+        chargeDataRV("cap")
 
 
         binding.rvSwipe.setOnRefreshListener {
-            chargeDataRV()
+
+            chargeDataRV("cap")
             binding.rvSwipe.isRefreshing=false
         }
+
+        binding.rvMarvel.addOnScrollListener(object : RecyclerView.OnScrollListener(){
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+
+                if (dy>0){
+                    //cuantos han pasado
+                    val v=lmanager.childCount
+                    //posicion
+                    val p= lmanager.findFirstCompletelyVisibleItemPosition()
+                    //cuantos tengo en total
+                    val t=lmanager.itemCount
+
+                    if((v+p)>=t){
+                        lifecycleScope.launch(Dispatchers.IO){
+                            val newItems=JikanAnimeLogic().getAllAnimes()
+//                            val newItems=MarvelLogic().getAllAnimes("electra",50)
+                            withContext(Dispatchers.Main){
+                                rvAdapter.updateListItems(newItems)
+                            }
+                        }
+                    }
+                }
+
+            }
+        })
 
     }
 
@@ -91,21 +126,39 @@ class SecondFragment : Fragment() {
         startActivity(i)
     }
 
-    fun chargeDataRV(){
+//    fun corrutine(){
+//        lifecycleScope.launch(Dispatchers.Main){
+//            var name="Antonio"
+////            lifecycleScope.launch(Dispatchers.IO){
+////                name="Joss"
+////                //Son 2 espacios complemente distintos, no se da el cambio
+////            }
+//            name= withContext(Dispatchers.IO){
+//                name="Joss"
+//                return@withContext name
+//                //Lo arreglamos de esta forma
+//            }
+//
+//
+//        }
+//    }
+
+    fun chargeDataRV(search:String){
 
         lifecycleScope.launch(Dispatchers.IO){
-            val rvAdapter=MarvelAdapter(
+
+            //no me srive mucho porq reemplaza la lista no la añade
+             rvAdapter=MarvelAdapter(
 //            ListItems().returnMarvelChars()
-                MarvelLogic().getAllAnimes("spider",5)
+                 JikanAnimeLogic().getAllAnimes()
+
+//                MarvelLogic().getAllAnimes(search,50)
             ) { sendMarvelItem(it) }
 
             withContext(Dispatchers.Main){
                 with(binding.rvMarvel){
                     this.adapter=rvAdapter
-                    this.layoutManager=LinearLayoutManager(
-                        requireActivity(),
-                        LinearLayoutManager.VERTICAL,
-                        false)
+                    this.layoutManager=lmanager
 
                 }
             }
