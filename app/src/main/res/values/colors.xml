@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="low_gray">#7B797E</color>
+    <color name="col2">#86E7B8</color>
+    <color name="fondo">#1c2334</color>
+    <color name="fondo2">#EAE8DD</color>
+    <color name="color_letra">#BDE8D3</color>
+    <color name="color_boton">#EE468F</color>
+    <color name="orange">#FF5722</color>
+
+</resources>
