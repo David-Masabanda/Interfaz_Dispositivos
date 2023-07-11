@@ -16,6 +16,7 @@ import com.masabanda.app.logic.data.MarvelChars
 import com.masabanda.app.logic.marvelLogic.MarvelLogic
 import com.masabanda.app.ui.activities.DetailsMarvelItem
 import com.masabanda.app.ui.adapters.MarvelAdapter
+import com.masabanda.app.ui.utilities.ProyectoDispositivos
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -79,6 +80,7 @@ class FirstFragment : Fragment() {
             chargeDataRV()
             binding.rvSwipe.isRefreshing = false
         }
+
         binding.rvMarvel.addOnScrollListener(
             object  : RecyclerView.OnScrollListener(){
                 override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
@@ -124,8 +126,6 @@ class FirstFragment : Fragment() {
 
 
     private fun chargeDataRV() {
-
-
         lifecycleScope.launch(Dispatchers.Main) {
             marvelCharacterItems= withContext(Dispatchers.IO){
                 return@withContext (MarvelLogic().getAllMarvelChars (0,99))
@@ -145,6 +145,35 @@ class FirstFragment : Fragment() {
                 this.adapter = rvAdapter
                 //  this.layoutManager = lmanager
                 this.layoutManager = gmanager
+            }
+
+        }
+    }
+
+
+    private fun chargeDataRVDB() {
+        lifecycleScope.launch(Dispatchers.Main) {
+
+            marvelCharacterItems= withContext(Dispatchers.IO){
+
+                var marvelCharacterItems = MarvelLogic().getAllMarvelChars().toMutableList()
+
+                if (marvelCharacterItems.isEmpty()){
+                    marvelCharacterItems= withContext(Dispatchers.IO){
+                        return@withContext (MarvelLogic().getAllMarvelChars (0,99))
+                    } as MutableList<MarvelChars>
+                }
+
+            withContext(Dispatchers.IO){
+                MarvelLogic().insertMarvelCharsDB(marvelCharacterItems)
+            }
+
+            rvAdapter.items =marvelCharacterItems
+
+            binding.rvMarvel.apply{
+                this.adapter = rvAdapter
+                this.layoutManager = gmanager
+                gmanager.scrollToPositionWithOffset(pos,)
             }
 
         }

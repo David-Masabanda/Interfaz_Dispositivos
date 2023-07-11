@@ -8,6 +8,7 @@ import com.google.android.material.snackbar.Snackbar
 import com.masabanda.app.R
 import com.masabanda.app.databinding.ActivityMainBinding
 import com.masabanda.app.logic.validator.LoginValidator
+import com.masabanda.app.ui.utilities.ProyectoDispositivos
 
 class MainActivity : AppCompatActivity() {
 
@@ -25,6 +26,10 @@ class MainActivity : AppCompatActivity() {
     override fun onStart() {
         super.onStart()
         initClass()
+
+        //De esta forma tengo una sola instancia
+        val db = ProyectoDispositivos.getDBInstance()
+        db.marvelDao().getAllCharacters()
     }
 
     private fun initClass() {

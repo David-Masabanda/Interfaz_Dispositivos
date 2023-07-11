@@ -26,7 +26,7 @@ fun Result.getMarvelChars(): MarvelChars {
     val heroe= MarvelChars(
         id,
         name,
-        comics.items.toString(),
+        comic,
         thumbnail.path +"."+ thumbnail.extension
 
 
