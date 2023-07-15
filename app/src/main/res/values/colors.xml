@@ -1,19 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="black">#FF000000</color>
-    <color name="FondoApp">#FFFFFFFF</color>
-    <color name="low_gray">#8452CA</color>
-    <color name="col2">#86E7B8</color>
-    <color name="fondo">#1c2334</color>
-    <color name="fondo2">#FBFBFB</color>
-    <color name="color_letra">#BDE8D3</color>
-    <color name="color_boton">#C410D6</color>
-    <color name="orange">#FF5722</color>
-    <color name="title_binding">#FF9800</color>
-    <color name="amarillo">#F1B912</color>
-    <color name="search_bg">#00BCD4</color>
-    <color name="TitulosColor">#FE5F6B</color>
-    <color name="plomo">#7C7C7C</color>
-    <color name="face">#23599A</color>
-    <color name="bird">#00A1F4</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="background_dm">#F7131212</color>
+    <color name="font_color_dm">#F3615757</color>
+    <color name="title_color_dm">#FBFBFB</color>
+
+    <color name="background_ej">#FFFFFF</color>
+    <color name="title_color_ej">#F7000000</color>
+    <color name="font_color_ej">#F7979191</color>
+    <color name="principal_color_ej">#F7FF5F76</color>
+    <color name="button_font_color_ej">#F7FFFFFF</color>
+    <color name="hint_text">#F71F1F1F</color>
+    <color name="fondo_marvel">#F7421F1F</color>
+
+
+    <color name="purple_200">#FFBB86FC</color>
+    <color name="purple_500">#FF6200EE</color>
+    <color name="purple_700">#FF3700B3</color>
+    <color name="teal_200">#FF03DAC5</color>
+    <color name="teal_700">#FF018786</color>
+    <color name="red">#F44336</color>
+    <color name="rosa">#ffc8dd</color>
+    <color name="gris">#AAB6BF</color>
+    <color name="gris2">#545455</color>
+    <color name="morado2">#dee2ff</color>
+    <color name="morado3">#D08DDB</color>
+    <color name="rosa2">#ffafcc</color>
+    <color name="rosa3">#fff0f3</color>
+    <color name="celeste2">#a2d2ff</color>
 </resources>

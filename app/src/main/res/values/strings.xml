@@ -1,10 +1,22 @@
 <resources>
     <string name="app_name">Pruebaxd</string>
+
     <string name="titulo">Pedidos Online</string>
-    <string name="saludo">Hola, es bueno verte otra vez</string>
-
-
-
-    <string name="pepe">Cancelar</string>
+    <string name="saludo">¡Hola! Es bueno verte nuevamente</string>
+    <string name="correo">Correo</string>
+    <string name="correoEjemplo">example@email.com</string>
+    <string name="password">Contraseña</string>
+    <string name="botonIngresar">Ingresar</string>
+    <string name="conectese">O conéctese usando las redes sociales</string>
+    <string name="olvidoPassword">¿Olvidó su contraseña?</string>
+    <string name="registrese">Registrese</string>
+    <string name="regresar">Regresar</string>
+    <string name="inicio">Inicio</string>
+    <string name="favoritos">Favoritos</string>
+    <string name="chatgpt">Chat GPT</string>
+    <string name="tituloMarvel">Marvel Worldwide, Inc.</string>
+    <string name="buscar">Buscar Personaje</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>

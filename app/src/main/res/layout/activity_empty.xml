@@ -4,37 +4,63 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".ui.activities.EmptyActivity">
 
-
-
-    <TextView
+    <!--<TextView
+        style="@style/styleTexto"
         android:id="@+id/textView"
-        android:layout_width="397dp"
-        android:layout_height="118dp"
-        android:layout_marginStart="5dp"
-        android:layout_marginTop="36dp"
-        android:gravity="left"
-        android:text="@string/pepe"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="190dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="160dp"
+        android:text="TextView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
-        android:id="@+id/button3"
+        android:id="@+id/back"
+        style="@style/button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="107dp"
-        android:layout_marginTop="169dp"
-        android:layout_marginEnd="127dp"
-        android:layout_marginBottom="317dp"
-        android:text="Regresar"
-        android:backgroundTint="@color/orange"
-        android:textColor="@color/fondo2"
+        android:layout_marginStart="170dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="150dp"
+        android:backgroundTint="@color/red"
+        android:text="@string/regresar"
+        android:textAllCaps="false"
+        app:cornerRadius="10dp"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView" />-->
+
+    <FrameLayout
+        android:id="@+id/frm_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintBottom_toTopOf="@id/bottom_navigation"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="parent"/>
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottom_navigation"
+        android:layout_width="match_parent"
+        android:layout_height="65dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView" />
-
+        android:background="@color/rosa"
+        app:menu="@menu/bottom_navigation_menu"
+        app:itemIconTint="@drawable/cualquiera"
+        app:itemTextColor="@drawable/cualquiera"
+        app:itemActiveIndicatorStyle="@style/ActiveIndicator"
+        app:itemTextAppearanceActive="@style/ActiveIndicator"
+        app:labelVisibilityMode="labeled"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

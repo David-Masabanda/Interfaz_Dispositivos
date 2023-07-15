@@ -1,5 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8" ?>
 <resources>
-    <dimen name="nombre">150dp</dimen>
-    <dimen name="tamanio">62dp</dimen>
+    <dimen name="tamanio">40dp</dimen>
+    <dimen name="marginStartEnd">40dp</dimen>
 </resources>

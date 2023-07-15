@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/inicio"
+        android:enabled="true"
+        android:icon="@drawable/baseline_home_24"
+        android:title="@string/inicio"
+        android:visible="true"/>
+    <item
+        android:id="@+id/fav"
+        android:enabled="true"
+        android:icon="@drawable/baseline_favorite_24"
+        android:title="@string/favoritos"
+        android:visible="true"/>
+    <item
+        android:id="@+id/api"
+        android:enabled="true"
+        android:icon="@drawable/baseline_api_24"
+        android:title="@string/chatgpt"
+        android:visible="true"/>
+</menu>

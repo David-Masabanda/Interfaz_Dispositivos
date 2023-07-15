@@ -5,48 +5,32 @@
         <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
     </style>
 
-    <style name="titulos">
-        <!-- Customize your light theme here. -->
-        <item name="android:textColor">@color/black</item>
-        <item name="android:textSize">25sp</item>
-        <item name="android:textStyle">bold</item>
-
-    </style>
-
-    <style name="subTitulos">
-        <!-- Customize your light theme here. -->
-        <item name="android:textColor">@color/plomo</item>
-        <item name="android:textSize">16sp</item>
-
-    </style>
-
-    <style name="titulosLogin">
-        <!-- Customize your light theme here. -->
-        <item name="android:textColor">@color/TitulosColor</item>
-        <item name="android:textSize">15sp</item>
-        <item name="android:textStyle">bold</item>
-
-    </style>
-
-    <style name="titulosEjemplo">
-        <!-- Customize your light theme here. -->
-        <item name="android:textColorHint">#CDC8C8</item>
-        <item name="android:textSize">14sp</item>
-        <item name="android:textColor">@color/black</item>
-
-    </style>
-
-
-
-
-    <style name="botones">
-        <!-- Customize your light theme here. -->
-        <item name="android:textColor">@color/fondo2</item>
-        <item name="android:textSize">20sp</item>
-        <item name="android:textStyle">bold</item>
-
-
-    </style>
 
     <style name="Theme.Pruebaxd" parent="Base.Theme.Pruebaxd" />
+
+
+    <style name="styleTitulo">
+        <item name="android:textColor">@color/black</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+    <style name="styleSubtitulo">
+        <item name="android:textColor">@color/red</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+    <style name="styleTexto">
+        <item name="android:textColor">@color/black</item>
+    </style>
+    <style name="ActiveIndicator" parent="Widget.Material3.BottomNavigationView.ActiveIndicator">
+        <item name="android:color">@color/morado2</item>
+    </style>
+    <style name="button" >
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+    <style name="activeIndicator" parent="Widget.Material3.BottomNavigationView.ActiveIndicator">
+        <item name="android:color">@color/principal_color_ej</item>
+
+    </style>
+
 </resources>

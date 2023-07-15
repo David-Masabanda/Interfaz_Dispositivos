@@ -1,6 +1,6 @@
-package com.example.pruebaxd.logic.entities
+package com.example.pruebaxd.data.entities
 
-// De esta forma ya tiene un admin y un password designado
-data class LoginUser(val name: String = "root",
-                     val pass: String = "root"
-)
+data class LoginUser(
+    val name: String ="Dome",
+    val pass:String="Dome") {
+}
