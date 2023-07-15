@@ -31,15 +31,16 @@ class FirstFragment : Fragment() {
 
     private lateinit var lmanager: LinearLayoutManager
 
-    private lateinit var gmanager: GridLayoutManager
+    //private lateinit var gmanager: GridLayoutManager
 
     private var marvelCharacterItems: MutableList<MarvelChars> = mutableListOf<MarvelChars>()
+    private var marvelItemsDB: MutableList<MarvelChars> = mutableListOf<MarvelChars>()
 
     //El limite nunca cambia
     private val limit=99
     private var offset=0
 
-    private var rvAdapter: MarvelAdapter = MarvelAdapter { sendMarvelItems(it) }
+    private var rvAdapter: MarvelAdapter = MarvelAdapter ({ sendMarvelItems(it) },{saveMarvelItem(it)})
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -54,9 +55,9 @@ class FirstFragment : Fragment() {
             LinearLayoutManager.VERTICAL,
             false
         )
-        gmanager = GridLayoutManager(
-            requireActivity(), 2
-        )
+//        gmanager = GridLayoutManager(
+//            requireActivity(), 2
+//        )
         return binding.root
     }
 
@@ -73,9 +74,10 @@ class FirstFragment : Fragment() {
         chargeDataRVInit(offset,limit)
 
         binding.rvSwipe.setOnRefreshListener {
-            chargeDataRVInit(offset,limit)
+            chargeDataRV(offset,limit)
             binding.rvSwipe.isRefreshing = false
         }
+
         binding.rvMarvelChars.addOnScrollListener(
             object : RecyclerView.OnScrollListener() {
                 override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
@@ -87,55 +89,167 @@ class FirstFragment : Fragment() {
                         val t = lmanager.itemCount
 
                         if ((v + p) >= t) {
-                            lifecycleScope.launch((Dispatchers.IO)) {
-                                val newItems = MarvelLogic().getAllMarvelChars(offset, limit)
-                                withContext(Dispatchers.Main) {
+                            var newItems = listOf<MarvelChars>()
+                            if (offset < 99) {
+                                //Log.i("En el scrollview Offset if","$offset")
+                                updateDataRV(limit, offset)
+                                lifecycleScope.launch((Dispatchers.Main)) {
+                                    this@FirstFragment.offset += limit
+                                    newItems = withContext(Dispatchers.IO) {
+                                        return@withContext (MarvelLogic().getAllMarvelChars(offset, limit))
+
+                                    }
                                     rvAdapter.updateListItems(newItems)
+
                                 }
+                            } else {
+                                //Log.i("En el scrollview Offset else","$offset")
+                                if (offset == 99) {
+                                    updateDataRV(limit, offset)
+                                } else {
+                                    updateAdapterRV()
+                                    lifecycleScope.launch((Dispatchers.Main)) {
+                                        rvAdapter.updateListItems(listOf())
+
+                                    }
+                                }
+
+
                             }
+
                         }
                     }
                 }
             })
     }
 
+    override fun onResume() {
+        super.onResume()
+        lifecycleScope.launch(Dispatchers.Main){
+            withContext(Dispatchers.IO){
+                marvelItemsDB=MarvelLogic().getAllCharactersDB().toMutableList()
+            }
+
+        }
+    }
+
     fun sendMarvelItems(item: MarvelChars) {
         val i = Intent(requireActivity(), DetailsMarvelItem::class.java)
         i.putExtra("name", item)
+        i.putExtra("comic", item)
+        i.putExtra("image", item)
         startActivity(i);
     }
 
-    fun chargeDataRV() {
+    private fun saveMarvelItem(item: MarvelChars): Boolean {
+        return if(item==null || marvelItemsDB.contains(item)){
+            false
+        }else{
+            lifecycleScope.launch(Dispatchers.Main){
+                withContext(Dispatchers.IO){
+                    MarvelLogic().insertMarvelCharstoDB(listOf(item))
+                    marvelItemsDB=MarvelLogic().getAllCharactersDB().toMutableList()
+                }
+
+            }
+            true
+        }
+    }
+
+
+    fun corrotine() {
+        lifecycleScope.launch(Dispatchers.Main) {
+            var name = "Fer"
+            name = withContext((Dispatchers.IO)) {
+                name = "Jairo"
+                return@withContext name
+            }
+        }
+    }
+
+    fun chargeDataRV(offset:Int,limit:Int) {
 
         lifecycleScope.launch(Dispatchers.Main) {
             marvelCharacterItems = withContext(Dispatchers.IO) {
                 return@withContext (
-                        MarvelLogic().getAllMarvelChars(0, 99))
-//                        JikanAnimeLogic().getAllAnimes ())
+                        MarvelLogic().getAllMarvelChars(offset, limit))
+
             } as MutableList<MarvelChars>
 
-            rvAdapter.items =
-                MarvelLogic().getAllMarvelChars(0, 99)
-//                JikanAnimeLogic().getAllAnimes()
+            rvAdapter.items =marvelCharacterItems
+
             binding.rvMarvelChars.apply {
                 this.adapter = rvAdapter
-                this.layoutManager = gmanager
+                this.layoutManager =lmanager
             }
         }
     }
-    private fun chargeDataRVInit( offset:Int,limit:Int,) {
+
+    fun updateDataRV(limit: Int, offset: Int) {
+        var items: List<MarvelChars> = listOf()
+        lifecycleScope.launch(Dispatchers.Main) {
+            items = withContext(Dispatchers.IO) {
+                return@withContext (MarvelLogic().getAllMarvelChars(offset, limit))
+            }
+
+            rvAdapter.updateListItems(items)
+            binding.rvMarvelChars.apply {
+                this.adapter = rvAdapter
+                this.layoutManager = lmanager
+            }
+        }
+
+
+    }
+    fun updateAdapterRV() {
+        lifecycleScope.launch(Dispatchers.Main) {
+            binding.rvMarvelChars.apply {
+                this.adapter = rvAdapter
+                this.layoutManager = lmanager
+            }
+        }
+    }
+
+    private fun chargeDataRVDB() {
+        lifecycleScope.launch(Dispatchers.Main) {
+            marvelCharacterItems = withContext(Dispatchers.IO) {
+                var marvelCharacterItems = MarvelLogic().getAllCharactersDB().toMutableList()
+
+                if (marvelCharacterItems.isEmpty()) {
+
+                    marvelCharacterItems =
+                        (MarvelLogic().getAllMarvelChars(offset, limit).toMutableList())
+                    MarvelLogic().insertMarvelCharstoDB(marvelCharacterItems)
+                }
+                return@withContext marvelCharacterItems
+            }
+
+            rvAdapter.items = marvelCharacterItems
+
+            binding.rvMarvelChars.apply {
+                this.adapter = rvAdapter
+                this.layoutManager = lmanager
+            }
+        }
+
+
+    }
+    private fun chargeDataRVInit( offset:Int,limit:Int) {
         if(Metodos().isOnline(requireActivity())){
             //Mucho ojo con las corrutinas y hasta donde colococamos los {}
             lifecycleScope.launch(Dispatchers.Main) {
                 marvelCharacterItems = withContext(Dispatchers.IO) {
-                    return@withContext MarvelLogic().getInitChars(offset, limit)
-                }
-                this@FirstFragment.offset+=limit
+                    return@withContext MarvelLogic().getAllMarvelChars(offset, limit)
+                } as MutableList<MarvelChars>
+
                 rvAdapter.items = marvelCharacterItems
+
                 binding.rvMarvelChars.apply {
                     this.adapter = rvAdapter
-                    this.layoutManager = gmanager
+                    this.layoutManager = lmanager
                 }
+
+                this@FirstFragment.offset+=limit
             }
         }else{
             Snackbar.make(

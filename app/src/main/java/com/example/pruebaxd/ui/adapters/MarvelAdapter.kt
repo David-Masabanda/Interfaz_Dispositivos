@@ -11,11 +11,13 @@ import com.example.pruebaxd.R
 
 import com.example.pruebaxd.data.entities.marvel.MarvelChars
 import com.example.pruebaxd.databinding.MarvelCharactersBinding
+import com.google.android.material.snackbar.Snackbar
 
 import com.squareup.picasso.Picasso
 
 class MarvelAdapter(
-    private var fnClick: (MarvelChars) -> Unit
+    private var fnClick: (MarvelChars) -> Unit,
+    private var fnSave: (MarvelChars) -> Boolean
 ) :
     RecyclerView.Adapter<MarvelAdapter.MarvelViewHolder>() {
     var items:List<MarvelChars> = listOf()
@@ -23,7 +25,9 @@ class MarvelAdapter(
     class MarvelViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         private val binding: MarvelCharactersBinding = MarvelCharactersBinding.bind(view)
         fun render(item: MarvelChars,
-                   fnClick: (MarvelChars) -> Unit) {
+                   fnClick: (MarvelChars) -> Unit,
+                   fnSave: (MarvelChars) -> Boolean
+        ) {
             binding.txtTitulo.text = item.nombre
             binding.txtComic.text = item.comic
             Picasso.get().load(item.imagen).into(binding.imgMarvel)
@@ -33,7 +37,22 @@ class MarvelAdapter(
             }
 
             binding.imgMarvel.setOnClickListener {
-                fnClick(item)
+                var checkInsert:Boolean=false
+                checkInsert=fnSave(item)
+                if(checkInsert){
+                    Snackbar.make(
+                        binding.imgMarvel,
+                        "Se agrego a favoritos",
+                        Snackbar.LENGTH_SHORT
+                    ).show()
+
+                }else{
+                    Snackbar.make(
+                        binding.imgMarvel,
+                        "No se puedo agregar o Ya esta agregado",
+                        Snackbar.LENGTH_SHORT
+                    ).show()
+                }
             }
         }
     }
@@ -61,7 +80,15 @@ class MarvelAdapter(
         notifyDataSetChanged()
 
     }
+
+
+    fun replaceListItems(newItems: List<MarvelChars>) {
+        this.items = newItems
+        notifyDataSetChanged()
+
+    }
+
     override fun onBindViewHolder(holder: MarvelAdapter.MarvelViewHolder, position: Int) {
-        holder.render(items[position], fnClick)
+        holder.render(items[position], fnClick, fnSave)
     }
 }

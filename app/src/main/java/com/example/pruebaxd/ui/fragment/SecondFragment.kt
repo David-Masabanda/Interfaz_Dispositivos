@@ -28,7 +28,7 @@ class SecondFragment : Fragment() {
     private lateinit var lmanager: LinearLayoutManager
     private var marvelCharacterItems: MutableList<MarvelChars> = mutableListOf<MarvelChars>()
     private lateinit var progressBar: ProgressBar
-    private  var rvAdapter: MarvelAdapter = MarvelAdapter { sendMarvelItems(it) }
+    private  var rvAdapter: MarvelAdapter = MarvelAdapter({ sendMarvelItems(it) }, { saveMarvelItem(it) })
 
 
     override fun onCreateView(
@@ -63,22 +63,37 @@ class SecondFragment : Fragment() {
         rvAdapter.replaceListAdapter(marvelCharacterItems)
     }
     fun sendMarvelItems(item: MarvelChars) {
-
         val i = Intent(requireActivity(), DetailsMarvelItem::class.java)
         i.putExtra("name", item)
+        i.putExtra("comic", item)
+        i.putExtra("image", item)
         startActivity(i)
+    }
+
+    private fun saveMarvelItem(item: MarvelChars): Boolean {
+        return if (item == null || marvelCharacterItems.contains(item)) {
+            false
+        } else {
+            lifecycleScope.launch(Dispatchers.Main) {
+                withContext(Dispatchers.IO) {
+                    MarvelLogic().insertMarvelCharstoDB(listOf(item))
+                    marvelCharacterItems = MarvelLogic().getAllCharactersDB().toMutableList()
+                }
+
+            }
+            true
+        }
+
     }
     private fun chargeDataRV(nombre:String) {
 
         lifecycleScope.launch(Dispatchers.Main) {
             progressBar.visibility = View.VISIBLE
             marvelCharacterItems= withContext(Dispatchers.IO){
-                return@withContext (MarvelLogic().getAllCharacters(nombre,5)
-                        )
+                return@withContext (MarvelLogic().getAllCharacters(nombre,5))
             } as MutableList<MarvelChars>
             if(marvelCharacterItems.size==0){
                 var f= Snackbar.make(binding.txtBucar, "No se encontró", Snackbar.LENGTH_LONG)
-
                 f.show()
             }
             rvAdapter.items =

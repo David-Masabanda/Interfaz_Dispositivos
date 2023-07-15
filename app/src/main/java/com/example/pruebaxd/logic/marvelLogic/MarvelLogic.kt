@@ -42,8 +42,6 @@ class MarvelLogic {
         if (call!=null){
             var response=call.getAllMarvelChars(offset,limit)
 
-            offset.toString()
-
             if (response.isSuccessful){
                 response.body()!!.data.results.forEach{
                     val m= it.getMarvelChars()
@@ -58,13 +56,20 @@ class MarvelLogic {
     }
     suspend fun getAllCharactersDB():List<MarvelChars>{
 
-        var itemList= arrayListOf<MarvelChars>()
+        var itemList: ArrayList<MarvelChars> = arrayListOf()
 
         val itemsAux = Pruebaxd.getDbInstance().marvelDao().getAllCharacters()
 
         itemsAux.forEach {
-            itemList.add(it.getMarvelChars()
+            itemList.add(
+                MarvelChars(
+                    it.id,
+                    it.name,
+                    it.comic,
+                    it.image
+                )
             )
+
         }
         return itemList
     }
