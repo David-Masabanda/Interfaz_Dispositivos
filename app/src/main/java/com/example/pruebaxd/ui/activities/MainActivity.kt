@@ -1,12 +1,23 @@
 package com.example.pruebaxd.ui.activities
 
+import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import com.example.dm_proyecto1_foodapp.Logic.validator.LoginValidator
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.core.edit
+import androidx.datastore.preferences.core.stringPreferencesKey
+import androidx.datastore.preferences.preferencesDataStore
+import androidx.lifecycle.lifecycleScope
+import com.example.pruebaxd.logic.validator.LoginValidator
 import com.example.pruebaxd.databinding.ActivityMainBinding
 import com.google.android.material.snackbar.Snackbar
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import java.util.UUID
 
+val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "settings")
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
@@ -32,8 +43,11 @@ class MainActivity : AppCompatActivity() {
                 binding.correoPassword.text.toString()
             )
             if (check){
-                var intent = Intent(this,EmptyActivity::class.java
-                )
+                lifecycleScope.launch(Dispatchers.IO){
+                    saveDataStore( binding.correoEjemplo.text.toString())
+                }
+
+                var intent = Intent(this,EmptyActivity::class.java)
                 intent.putExtra("var1",binding.correoEjemplo.text.toString())
                 startActivity(intent)
             }
@@ -46,6 +60,13 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private suspend fun  saveDataStore(stringData: String){
+        dataStore.edit {prefs->
+            prefs[stringPreferencesKey("usuario")]=   stringData
+            prefs[stringPreferencesKey("sesion")]=   UUID.randomUUID().toString()
+
+        }
+    }
 
 }
 

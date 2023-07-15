@@ -1,4 +1,4 @@
-package com.example.dm_proyecto1_foodapp.Logic.validator
+package com.example.pruebaxd.logic.validator
 
 
 import com.example.pruebaxd.data.entities.LoginUser

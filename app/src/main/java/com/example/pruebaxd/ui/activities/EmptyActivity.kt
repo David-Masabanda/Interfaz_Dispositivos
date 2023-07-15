@@ -81,6 +81,8 @@ class EmptyActivity : AppCompatActivity() {
         }
         startActivity(intent)
     }
+
+
 }
 
 

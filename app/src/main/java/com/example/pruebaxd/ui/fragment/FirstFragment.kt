@@ -2,11 +2,14 @@ package com.example.pruebaxd.ui.fragment
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
+import androidx.datastore.dataStore
+import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -16,10 +19,16 @@ import com.example.pruebaxd.R
 import com.example.pruebaxd.data.entities.marvel.MarvelChars
 import com.example.pruebaxd.databinding.FragmentFirstBinding
 import com.example.pruebaxd.ui.activities.DetailsMarvelItem
+import com.example.pruebaxd.ui.activities.dataStore
 import com.example.pruebaxd.ui.adapters.MarvelAdapter
+import com.example.pruebaxd.ui.data.UserDataStore
 import com.example.pruebaxd.ui.utilities.Metodos
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
@@ -37,10 +46,12 @@ class FirstFragment : Fragment() {
     private var marvelItemsDB: MutableList<MarvelChars> = mutableListOf<MarvelChars>()
 
     //El limite nunca cambia
-    private val limit=99
-    private var offset=0
+    private val limit = 99
+    private var offset = 0
 
-    private var rvAdapter: MarvelAdapter = MarvelAdapter ({ sendMarvelItems(it) },{saveMarvelItem(it)})
+    private var rvAdapter: MarvelAdapter =
+        MarvelAdapter({ sendMarvelItems(it) }, { saveMarvelItem(it) })
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -63,19 +74,26 @@ class FirstFragment : Fragment() {
 
     override fun onStart() {
         super.onStart()
-        val names = arrayListOf<String>("Spiderman", "Invisible Woman", "Eternity", "Black Widow")
 
-        val adapter = ArrayAdapter<String>(
-            requireActivity(),
-            R.layout.simple_spinner,
-            names
-        )
-        binding.spinner.adapter = adapter
-        chargeDataRVInit(offset,limit)
+        lifecycleScope.launch(Dispatchers.IO){
+            getDataStore().collect{user->
+//                binding.tituloAPI.text=it.toString()
+                Log.d("UCE", user.name)
+                Log.d("UCE", user.email)
+            }
+
+            //Cosas que puedo hacer, como un filtro
+//            getDataStore().filter{}.collect{}
+        }
+        
 
         binding.rvSwipe.setOnRefreshListener {
-            chargeDataRV(offset,limit)
+            chargeDataRV(offset, limit)
             binding.rvSwipe.isRefreshing = false
+        }
+        binding.rvMarvelChars.apply {
+            this.adapter=rvAdapter
+            this.layoutManager=lmanager
         }
 
         binding.rvMarvelChars.addOnScrollListener(
@@ -96,7 +114,10 @@ class FirstFragment : Fragment() {
                                 lifecycleScope.launch((Dispatchers.Main)) {
                                     this@FirstFragment.offset += limit
                                     newItems = withContext(Dispatchers.IO) {
-                                        return@withContext (MarvelLogic().getAllMarvelChars(offset, limit))
+                                        return@withContext (MarvelLogic().getAllMarvelChars(
+                                            offset,
+                                            limit
+                                        ))
 
                                     }
                                     rvAdapter.updateListItems(newItems)
@@ -125,9 +146,9 @@ class FirstFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        lifecycleScope.launch(Dispatchers.Main){
-            withContext(Dispatchers.IO){
-                marvelItemsDB=MarvelLogic().getAllCharactersDB().toMutableList()
+        lifecycleScope.launch(Dispatchers.Main) {
+            withContext(Dispatchers.IO) {
+                marvelItemsDB = MarvelLogic().getAllCharactersDB().toMutableList()
             }
 
         }
@@ -142,13 +163,13 @@ class FirstFragment : Fragment() {
     }
 
     private fun saveMarvelItem(item: MarvelChars): Boolean {
-        return if(item==null || marvelItemsDB.contains(item)){
+        return if (item == null || marvelItemsDB.contains(item)) {
             false
-        }else{
-            lifecycleScope.launch(Dispatchers.Main){
-                withContext(Dispatchers.IO){
+        } else {
+            lifecycleScope.launch(Dispatchers.Main) {
+                withContext(Dispatchers.IO) {
                     MarvelLogic().insertMarvelCharstoDB(listOf(item))
-                    marvelItemsDB=MarvelLogic().getAllCharactersDB().toMutableList()
+                    marvelItemsDB = MarvelLogic().getAllCharactersDB().toMutableList()
                 }
 
             }
@@ -167,7 +188,7 @@ class FirstFragment : Fragment() {
         }
     }
 
-    fun chargeDataRV(offset:Int,limit:Int) {
+    fun chargeDataRV(offset: Int, limit: Int) {
 
         lifecycleScope.launch(Dispatchers.Main) {
             marvelCharacterItems = withContext(Dispatchers.IO) {
@@ -176,11 +197,11 @@ class FirstFragment : Fragment() {
 
             } as MutableList<MarvelChars>
 
-            rvAdapter.items =marvelCharacterItems
+            rvAdapter.items = marvelCharacterItems
 
             binding.rvMarvelChars.apply {
                 this.adapter = rvAdapter
-                this.layoutManager =lmanager
+                this.layoutManager = lmanager
             }
         }
     }
@@ -201,6 +222,7 @@ class FirstFragment : Fragment() {
 
 
     }
+
     fun updateAdapterRV() {
         lifecycleScope.launch(Dispatchers.Main) {
             binding.rvMarvelChars.apply {
@@ -234,8 +256,9 @@ class FirstFragment : Fragment() {
 
 
     }
-    private fun chargeDataRVInit( offset:Int,limit:Int) {
-        if(Metodos().isOnline(requireActivity())){
+
+    private fun chargeDataRVInit(offset: Int, limit: Int) {
+        if (Metodos().isOnline(requireActivity())) {
             //Mucho ojo con las corrutinas y hasta donde colococamos los {}
             lifecycleScope.launch(Dispatchers.Main) {
                 marvelCharacterItems = withContext(Dispatchers.IO) {
@@ -249,9 +272,9 @@ class FirstFragment : Fragment() {
                     this.layoutManager = lmanager
                 }
 
-                this@FirstFragment.offset+=limit
+                this@FirstFragment.offset += limit
             }
-        }else{
+        } else {
             Snackbar.make(
                 binding.cardView,
                 "Nohay conexion",
@@ -261,6 +284,26 @@ class FirstFragment : Fragment() {
     }
 
 
+//    private fun getDataStore()=
+//    //En un fragment no podemos acceder directamente al datastore porq no tiene un ocntexto como tal, absorve el contexto del activity en el q esta
+//        //por ersa razon se usa requireActivity
+//        requireActivity().dataStore.data.map { prefs ->
+//            //Devuelve lo que encuentra pero en el caso de que no exista devuelve un vacio con el empty
+//            prefs[stringPreferencesKey("password")].orEmpty()
+//        }
+
+    private fun getDataStore()= requireActivity().dataStore.data.map {
+            prefs->
+        UserDataStore(
+            name=prefs[stringPreferencesKey("usuario")].orEmpty(),
+            email=prefs[stringPreferencesKey("email")].orEmpty(),
+        )
+
+    }
+
+
+
+    //Funcion en un alinea
 
 //    fun chargeDataRVAPI(limit:Int, offset:Int){
 //
