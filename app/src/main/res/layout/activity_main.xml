@@ -168,7 +168,7 @@
         app:srcCompat="@drawable/twtlogin" />
 
     <Button
-        android:id="@+id/button"
+        android:id="@+id/buttonRegistrar"
         style="@style/styleSubtitulo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

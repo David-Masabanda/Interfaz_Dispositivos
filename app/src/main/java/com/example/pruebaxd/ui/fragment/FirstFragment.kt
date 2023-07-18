@@ -85,7 +85,7 @@ class FirstFragment : Fragment() {
             //Cosas que puedo hacer, como un filtro
 //            getDataStore().filter{}.collect{}
         }
-        
+
 
         binding.rvSwipe.setOnRefreshListener {
             chargeDataRV(offset, limit)
