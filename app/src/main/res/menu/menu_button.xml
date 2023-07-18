@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/option_1"
+        android:enabled="true"
+        android:icon="@drawable/baseline_rocket"
+        android:title="Marvel"
+        android:visible="true" />
+    <item
+        android:id="@+id/option_2"
+        android:enabled="true"
+        android:icon="@drawable/baseline_search"
+        android:title="Buscar"
+        android:visible="true" />
+    <item
+        android:id="@+id/option_3"
+        android:enabled="true"
+        android:icon="@drawable/baseline_api"
+        android:title="API"
+        android:visible="true" />
+
+</menu>
