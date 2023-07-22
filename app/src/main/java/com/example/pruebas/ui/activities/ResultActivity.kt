@@ -1,5 +1,6 @@
 package com.example.pruebas.ui.activities
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.example.pruebas.R
@@ -19,14 +20,20 @@ class ResultActivity : AppCompatActivity() {
         super.onStart()
 
         binding.btnInicio.setOnClickListener{
+            val i= Intent()
+            i.putExtra("result", "Testeo exitoso")
+
             //Con la funcion setResult enviamos el resultado final
-            setResult(RESULT_OK)
+            setResult(RESULT_OK,i)
             //Con esto logramos que la activity finalice
             finish()
         }
 
         binding.btnResult.setOnClickListener{
-            setResult(RESULT_CANCELED)
+            val i=Intent()
+            i.putExtra("result", "Testeo fallido")
+
+            setResult(RESULT_CANCELED,i)
             finish()
         }
     }

@@ -2,8 +2,7 @@ package com.example.pruebas.ui.activities
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import com.example.pruebas.R
-import com.example.pruebas.data.entities.marvel.MarvelChars
+import com.example.pruebas.logic.data.MarvelChars
 import com.example.pruebas.databinding.ActivityDetailsMarvelItemBinding
 import com.squareup.picasso.Picasso
 

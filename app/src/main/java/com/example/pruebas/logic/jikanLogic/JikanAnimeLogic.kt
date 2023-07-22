@@ -2,8 +2,7 @@ package com.example.pruebas.logic.jikanLogic
 
 import com.example.pruebas.data.connections.ApiConnection
 import com.example.pruebas.data.endpoints.JikanEndPoint
-import com.example.pruebas.data.entities.marvel.MarvelChars
-import retrofit2.create
+import com.example.pruebas.logic.data.MarvelChars
 
 class JikanAnimeLogic {
 

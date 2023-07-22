@@ -5,9 +5,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.pruebas.R
-import com.example.pruebas.data.entities.marvel.MarvelChars
+import com.example.pruebas.logic.data.MarvelChars
 import com.example.pruebas.databinding.MarvelCharactersBinding
-import com.google.android.material.snackbar.Snackbar
 import com.squareup.picasso.Picasso
 
 class MarvelAdapter(
@@ -18,7 +17,6 @@ class MarvelAdapter(
     class MarvelViewHolder (view: View) : RecyclerView.ViewHolder(view){
 
         private val binding: MarvelCharactersBinding=MarvelCharactersBinding.bind(view)
-
         fun render(item : MarvelChars, fnClick:(MarvelChars)->Unit){
 //            println("Recibiendo a ${item.nombre}")
             Picasso.get().load(item.imagen).into(binding.imagen)

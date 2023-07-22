@@ -9,20 +9,20 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.pruebas.R
-import com.example.pruebas.data.entities.marvel.MarvelChars
+import com.example.pruebas.logic.data.MarvelChars
 import com.example.pruebas.databinding.FragmentFirstBinding
 import com.example.pruebas.logic.jikanLogic.JikanAnimeLogic
-import com.example.pruebas.logic.list.ListItems
 import com.example.pruebas.logic.marvelLogic.MarvelLogic
 import com.example.pruebas.ui.activities.DetailsMarvelItem
 import com.example.pruebas.ui.activities.dataStore
 import com.example.pruebas.ui.adapters.MarvelAdapter
 import com.example.pruebas.ui.data.UserDataStore
+import com.example.pruebas.ui.utilities.Metodos
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -34,7 +34,11 @@ class FirstFragment : Fragment() {
 
     private lateinit var lmanager: LinearLayoutManager
     private lateinit var rvAdapter: MarvelAdapter
+    private lateinit var gmanager: GridLayoutManager
     private lateinit var marvelCharsItems: MutableList<MarvelChars>
+
+    private val limit=99
+    private var offset=0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,9 +48,8 @@ class FirstFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
         binding= FragmentFirstBinding.inflate(layoutInflater,container,false)
-
+        gmanager= GridLayoutManager(requireActivity(),2)
         lmanager=LinearLayoutManager(
             requireActivity(),
             LinearLayoutManager.VERTICAL,
@@ -83,11 +86,11 @@ class FirstFragment : Fragment() {
 
 //        chargeDataRV()
 
-        chargeDataRV2("Spider")
+        chargeDataRV3("Spider")
 
         binding.rvSwipe.setOnRefreshListener {
 //            chargeDataRV()
-            chargeDataRV2("Spider")
+            chargeDataRV3("Spider")
             binding.rvSwipe.isRefreshing=false
         }
 
@@ -103,12 +106,24 @@ class FirstFragment : Fragment() {
                     if ((v+p)>=t){
                         lifecycleScope.launch(Dispatchers.IO){
                             //val newItems=JikanAnimeLogic().getAllAnimes()
-                            val newItems=MarvelLogic().getAllChars("Hulk",10)
+                            //val newItems=MarvelLogic().getAllChars("Hulk",10)
+                            val newItems=MarvelLogic().getAllMarvelChars(0,99)
                             withContext(Dispatchers.Main){
                                 rvAdapter.updateListItems(newItems)
                             }
                         }
                     }
+
+                    //Version 2
+//                    if ((v+p)>=t){
+//                        lifecycleScope.launch(Dispatchers.Main){
+//                            val newItems= with(Dispatchers.IO){
+//                                MarvelLogic().getAllMarvelChars(offset,limit)
+//                            }
+//                            rvAdapter.updateListItems(newItems)
+//                            this@FirstFragment.offset+=offset
+//                        }
+//                    }
                 }
             }
         })
@@ -120,7 +135,7 @@ class FirstFragment : Fragment() {
 //
 //        binding.rvMarvel.addTextChangedListener{filteredText->
 //            val newItems = marvelCharsItems.filter { items->
-//                items.nombre.contains(filteredText.toString())
+//                items.nombre.lowercase().contains(filteredText.toString().lowercase())
 //            }
 //
 //            rvAdapter.replaceListItemsAdapter(newItems)
@@ -166,7 +181,7 @@ class FirstFragment : Fragment() {
     fun chargeDataRV2(search: String){
         lifecycleScope.launch(Dispatchers.IO){
             //rvAdapter= MarvelAdapter(JikanAnimeLogic().getAllAnimes()){sendMarvelItem(it)}
-            rvAdapter=MarvelAdapter(MarvelLogic().getAllChars(search,10)){sendMarvelItem(it)}
+            rvAdapter=MarvelAdapter(MarvelLogic().getMarvelChars(search,10)){sendMarvelItem(it)}
             withContext(Dispatchers.Main){
                 with(binding.rvMarvel){
                     this.adapter=rvAdapter
@@ -178,19 +193,52 @@ class FirstFragment : Fragment() {
 
     fun chargeDataRV3(search: String){
 
-        lifecycleScope.launch(Dispatchers.IO){
-            var marvelCharsItems= MarvelLogic().getAllChars("spider",5)
+        lifecycleScope.launch(Dispatchers.Main){
+            marvelCharsItems = withContext(Dispatchers.IO){
+                return@withContext MarvelLogic().getAllMarvelChars(0,99)
+            }
 
             //rvAdapter= MarvelAdapter(JikanAnimeLogic().getAllAnimes()){sendMarvelItem(it)}
             rvAdapter=MarvelAdapter(marvelCharsItems){sendMarvelItem(it)}
-            withContext(Dispatchers.Main){
-                with(binding.rvMarvel){
-                    this.adapter=rvAdapter
-                    this.layoutManager=lmanager
-                }
+            binding.rvMarvel.apply {
+                this.adapter=rvAdapter
+                this.layoutManager=lmanager
+//                this.layoutManager=gmanager
+
             }
         }
     }
+
+
+    fun chargeDataRVInit(limit: Int, offset: Int){
+
+        if (Metodos().isOnline(requireActivity())){
+            lifecycleScope.launch(Dispatchers.Main){
+                marvelCharsItems = withContext(Dispatchers.IO){
+                    return@withContext MarvelLogic().getInitChars(limit,offset)
+                }
+
+                //rvAdapter= MarvelAdapter(JikanAnimeLogic().getAllAnimes()){sendMarvelItem(it)}
+                rvAdapter=MarvelAdapter(marvelCharsItems){sendMarvelItem(it)}
+                binding.rvMarvel.apply {
+                    this.adapter=rvAdapter
+//                    this.layoutManager=lmanager
+                    this.layoutManager=gmanager
+                }
+                this@FirstFragment.offset+=limit
+            }
+        }else{
+            Snackbar.make(
+                binding.rvMarvel,"No hay conexion", Snackbar.LENGTH_SHORT
+            ).show()
+        }
+
+
+    }
+
+
+
+
 
     fun sendMarvelItem(item: MarvelChars){
         val i= Intent(requireActivity(), DetailsMarvelItem::class.java)
