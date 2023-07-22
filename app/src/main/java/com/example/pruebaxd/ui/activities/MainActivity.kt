@@ -1,9 +1,10 @@
 package com.example.pruebaxd.ui.activities
 
+import android.annotation.SuppressLint
 import android.app.SearchManager
 import android.content.Context
 import android.content.Intent
-import android.graphics.Color
+import android.location.Geocoder
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -20,6 +21,8 @@ import androidx.lifecycle.lifecycleScope
 import com.example.pruebaxd.R
 import com.example.pruebaxd.logic.validator.LoginValidator
 import com.example.pruebaxd.databinding.ActivityMainBinding
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -27,16 +30,22 @@ import java.util.Locale
 import java.util.UUID
 
 val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "settings")
+
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
+    private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        //Para darle un contexto la inicializamos aqui
+        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
     }
 
+    @SuppressLint("MissingPermission")
     override fun onStart() {
         super.onStart()
         initClass()
@@ -66,10 +75,6 @@ class MainActivity : AppCompatActivity() {
 
 
         }
-
-
-
-
 
 
         val speechToText = registerForActivityResult(StartActivityForResult()){activityResult->
@@ -116,10 +121,49 @@ class MainActivity : AppCompatActivity() {
         }
 
 
+        //Ahora necesito llamar a un PermissionResult porque voy a pedir
+        val locationContract = registerForActivityResult(ActivityResultContracts.RequestPermission()){
+         isGranted->
+
+            when(isGranted){
+                true->{
+                    //Agregar la anotacion al initclass
+                    fusedLocationProviderClient.lastLocation.addOnSuccessListener {
+
+//                        if (task.result!=null){
+//                            Snackbar.make(binding.titulo, "${it.latitude},${it.longitude}", Snackbar.LENGTH_SHORT).show()
+//
+//                        }else{
+//                            Snackbar.make(binding.titulo, "Encienda el GPS", Snackbar.LENGTH_SHORT).show()
+//                        }
+
+//                        it.longitude
+//                        it.latitude
+
+                        val a = Geocoder(this)
+                        a.getFromLocation(it.latitude,it.longitude,1)
+                    }
+
+                    shouldShowRequestPermissionRationale(android.Manifest.permission.ACCESS_FINE_LOCATION)->
+//
+//                    shouldShowRequestPermissionRationale(android.Manifest.permission.ACCESS_FINE_LOCATION)->{
+//                        Snackbar.make(binding.imageView, "Dame el permiso o tienes 0", Snackbar.LENGTH_SHORT).show()
+//                    }
+                }
+
+                false->{Snackbar.make(binding.imageView, "Permiso denegado", Snackbar.LENGTH_SHORT).show()}
+
+            }
+
+        }
+
+
+
         //fACE
         binding.imageButton5.setOnClickListener{
 //            val resIntent=Intent(this,ResultActivity::class.java)
 //            appResultLocal.launch(resIntent)
+
             val intentSpeech = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH)
             intentSpeech.putExtra(
                 RecognizerIntent.EXTRA_LANGUAGE_MODEL,
@@ -142,15 +186,20 @@ class MainActivity : AppCompatActivity() {
 //            val intent= Intent(Intent.ACTION_VIEW,
 //                Uri.parse("https://twitter.com/i/flow/login?redirect_after_login=%2F%3Flang%3Des"))
 
-            val intent = Intent(
-                Intent.ACTION_WEB_SEARCH
-            )
-            intent.setClassName(
-                "com.google.android.googlequicksearchbox",
-                "com.google.android.googlequicksearchbox.SearchActivity"
-            )
-            intent.putExtra(SearchManager.QUERY, binding.correoEjemplo.text)
-            startActivity(intent)
+            //Para buscar segun un texto
+//            val intent = Intent(
+//                Intent.ACTION_WEB_SEARCH
+//            )
+//            intent.setClassName(
+//                "com.google.android.googlequicksearchbox",
+//                "com.google.android.googlequicksearchbox.SearchActivity"
+//            )
+//            intent.putExtra(SearchManager.QUERY, binding.correoEjemplo.text)
+//            startActivity(intent)
+
+            //De esta forma referenciamos al manifest general
+            //locationContract.launch(android.Manifest.permission.ACCESS_COARSE_LOCATION)
+            locationContract.launch(android.Manifest.permission.ACCESS_FINE_LOCATION)
         }
 
 
