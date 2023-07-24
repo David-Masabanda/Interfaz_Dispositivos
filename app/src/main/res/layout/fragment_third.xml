@@ -21,7 +21,7 @@
         <ImageView
             android:src="@drawable/pokemon"
             android:layout_width="match_parent"
-            android:layout_height="150dp"/>
+            android:layout_height="200dp"/>
 
         <TextView
             android:id="@+id/texto2"
@@ -29,7 +29,7 @@
             android:layout_height="match_parent"
             android:fontFamily="sans-serif-black"
             android:gravity="bottom|center_horizontal"
-            android:text="Proximamente Pokemon API"
+            android:text="Tercer Fragment"
             android:textSize="42sp" />
     </androidx.cardview.widget.CardView>
 

@@ -45,6 +45,7 @@ class SecondFragment : Fragment() {
         binding = FragmentSecondBinding.inflate(
             layoutInflater, container, false
         )
+        lmanager=LinearLayoutManager(requireActivity(),LinearLayoutManager.VERTICAL,false)
         progressBar=binding.progressBar
         return binding.root
     }
@@ -70,14 +71,13 @@ class SecondFragment : Fragment() {
     }
 
 
-
-
     }
 
     fun reset(){
         marvelCharacterItems=mutableListOf<MarvelChars>()
         rvAdapter.replaceListItemsAdapter(marvelCharacterItems)
     }
+
     fun sendMarvelItems(item: MarvelChars) {
         val i = Intent(requireActivity(), DetailsMarvelItem::class.java)
         i.putExtra("name", item)
@@ -92,8 +92,9 @@ class SecondFragment : Fragment() {
             progressBar.visibility = View.VISIBLE
             marvelCharacterItems= withContext(Dispatchers.IO){
                 return@withContext (MarvelLogic().getMarvelChars(nombre,5))
-            } as MutableList<MarvelChars>
+            }
             if(marvelCharacterItems.size==0){
+
                 var f= Snackbar.make(binding.txtBuscar, "No se encontró", Snackbar.LENGTH_LONG)
                 f.show()
             }
