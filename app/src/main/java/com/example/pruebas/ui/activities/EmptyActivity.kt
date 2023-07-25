@@ -3,6 +3,7 @@ package com.example.pruebas.ui.activities
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.lifecycle.viewmodel.CreationExtras
 import com.example.pruebas.R
@@ -32,6 +33,7 @@ class EmptyActivity : AppCompatActivity() {
             Snackbar.make(binding.txtSaludo, "Fallo en la verificacion", Snackbar.LENGTH_SHORT).show()
         }
 
+        Log.d("UCE", "Empty Activity")
     }
 
     override fun onStart() {

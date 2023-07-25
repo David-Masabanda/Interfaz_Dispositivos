@@ -1,10 +1,15 @@
 package com.example.pruebas.ui.activities
 
+import android.annotation.SuppressLint
+import android.app.AlertDialog
 import android.app.SearchManager
 import android.content.Context
 import android.content.Intent
+import android.location.Geocoder
+import android.location.Location
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Looper
 import android.speech.RecognizerIntent
 import android.util.Log
 import androidx.activity.result.contract.ActivityResultContracts
@@ -17,6 +22,12 @@ import androidx.lifecycle.lifecycleScope
 import com.example.pruebas.R
 import com.example.pruebas.databinding.ActivityMainBinding
 import com.example.pruebas.logic.LoginValidator
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationCallback
+import com.google.android.gms.location.LocationRequest
+import com.google.android.gms.location.LocationResult
+import com.google.android.gms.location.LocationServices
+import com.google.android.gms.location.Priority
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -27,17 +38,115 @@ val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "se
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
+    private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
+
+    private lateinit var locationRequest : LocationRequest
+    private lateinit var locationCallback : LocationCallback
+    private var currentLocation : Location? =null
+
+    val speechToText = registerForActivityResult(ActivityResultContracts.StartActivityForResult()){ activityResult->
+        val sn=Snackbar.make(binding.imageView, "", Snackbar.LENGTH_LONG)
+        var message=""
+        when(activityResult.resultCode){
+            RESULT_OK->{
+                //Devuelve el texto de voz
+                val msg = activityResult
+                    .data?.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS)?.get(0)
+                    .toString()
+
+                //Para hacer una consulta con la voz
+                //Borrar el white data del emulador en tools
+                if(msg.isNotEmpty()){
+                    val intent = Intent(
+                        Intent.ACTION_WEB_SEARCH
+                    )
+                    intent.setClassName(
+                        "com.google.android.googlequicksearchbox",
+                        "com.google.android.googlequicksearchbox.SearchActivity"
+                    )
+                    intent.putExtra(SearchManager.QUERY, msg)
+                    startActivity(intent)
+                }
+                sn.setBackgroundTint(resources.getColor(R.color.blue))
+            }
+            RESULT_CANCELED->{
+                message="Proceso cancelado"
+                sn.setBackgroundTint(resources.getColor(R.color.red))}
+            else->{
+                message="Ocurrio un error"
+                sn.setBackgroundTint(resources.getColor(R.color.red))
+            }
+        }
+        sn.setText(message)
+        sn.show()
+    }
+
+    @SuppressLint("MissingPermission")
+    val locationContract = registerForActivityResult(ActivityResultContracts.RequestPermission()){
+            isGranted->
+        when(isGranted){
+            true->{
+                val task = fusedLocationProviderClient.lastLocation
+                task.addOnSuccessListener {location->
+                   fusedLocationProviderClient.requestLocationUpdates(
+                       locationRequest,locationCallback,Looper.getMainLooper()
+                   )
+                }
+
+                task.addOnFailureListener{
+                    val alert = AlertDialog.Builder(
+                        this, com.google.android.material.R.style.Base_ThemeOverlay_AppCompat )
+                    alert.apply {
+                        setTitle("Alerta")
+                        setMessage("Existe un problema con el sistema de posicionamiento global")
+                        setPositiveButton("OK"){dialog, id -> dialog.dismiss()}
+                        setCancelable(false)
+                    }.create()
+                    alert.show()
+                }
+            }
+            shouldShowRequestPermissionRationale(android.Manifest.permission.ACCESS_FINE_LOCATION)->{
+
+            }
+            false->{
+                Snackbar.make(binding.imageView, "Permiso denegado", Snackbar.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
+
+        locationRequest = LocationRequest.Builder(
+            Priority.PRIORITY_HIGH_ACCURACY,1000
+        ).build()
+
+        locationCallback = object : LocationCallback(){
+            override fun onLocationResult(locationResult : LocationResult) {
+                super.onLocationResult(locationResult)
+
+                if(locationResult!=null){
+                    locationResult.locations.forEach{ location->
+                        currentLocation = location
+                        Log.d("UCE", "Ubicacion: ${location.latitude},"+"${location.longitude}")
+                    }
+                }
+            }
+        }
     }
+
+
+
 
     override fun onStart() {
         super.onStart()
         initClass()
-
 
         //Importar el Register
         //Es un contrato y las clausulas que debera comprobar cuando se lance ese contrato
@@ -55,47 +164,6 @@ class MainActivity : AppCompatActivity() {
                     resultActivity.data?.getStringExtra("result").orEmpty()}
                 else->{ "Testeo dudoso"}
             }
-            sn.setText(message)
-            sn.show()
-
-        }
-
-
-        val speechToText = registerForActivityResult(ActivityResultContracts.StartActivityForResult()){ activityResult->
-            val sn=Snackbar.make(binding.imageView, "", Snackbar.LENGTH_LONG)
-            var message=""
-            when(activityResult.resultCode){
-                RESULT_OK->{
-                    //Devuelve el texto de voz
-                    val msg = activityResult
-                        .data?.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS)?.get(0)
-                        .toString()
-
-                    //Para hacer una consulta con la voz
-                    //Borrar el white data del emulador en tools
-                    if(msg.isNotEmpty()){
-                        val intent = Intent(
-                            Intent.ACTION_WEB_SEARCH
-                        )
-                        intent.setClassName(
-                            "com.google.android.googlequicksearchbox",
-                            "com.google.android.googlequicksearchbox.SearchActivity"
-                        )
-                        intent.putExtra(SearchManager.QUERY, msg)
-                        startActivity(intent)
-                    }
-                    sn.setBackgroundTint(resources.getColor(R.color.blue))
-                }
-                RESULT_CANCELED->{
-                    message="Proceso cancelado"
-                    sn.setBackgroundTint(resources.getColor(R.color.red))}
-                else->{
-                    message="Ocurrio un error"
-                    sn.setBackgroundTint(resources.getColor(R.color.red))
-                }
-
-            }
-
             sn.setText(message)
             sn.show()
         }
@@ -121,26 +189,24 @@ class MainActivity : AppCompatActivity() {
 
             //La estructura debe ser lineal no puedo acceder a partes que se declaran despues
             speechToText.launch(intentSpeech)
-
-
-
         }
-
 
         //Twitter
         binding.imageButton2.setOnClickListener{
 //            val intent= Intent(Intent.ACTION_VIEW,
 //                Uri.parse("https://twitter.com/i/flow/login?redirect_after_login=%2F%3Flang%3Des"))
 
-            val intent = Intent(
-                Intent.ACTION_WEB_SEARCH
-            )
-            intent.setClassName(
-                "com.google.android.googlequicksearchbox",
-                "com.google.android.googlequicksearchbox.SearchActivity"
-            )
-            intent.putExtra(SearchManager.QUERY, binding.editTextTextPassword.text)
-            startActivity(intent)
+//            val intent = Intent(
+//                Intent.ACTION_WEB_SEARCH
+//            )
+//            intent.setClassName(
+//                "com.google.android.googlequicksearchbox",
+//                "com.google.android.googlequicksearchbox.SearchActivity"
+//            )
+//            intent.putExtra(SearchManager.QUERY, binding.editTextTextPassword.text)
+//            startActivity(intent)
+
+            locationContract.launch(android.Manifest.permission.ACCESS_FINE_LOCATION)
         }
 
 
@@ -179,6 +245,11 @@ class MainActivity : AppCompatActivity() {
             prefs[stringPreferencesKey("sesion")] = UUID.randomUUID().toString()
             prefs[stringPreferencesKey("email")] = "jdmasabanda@uce.edu.com"
         }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        fusedLocationProviderClient.removeLocationUpdates(locationCallback)
     }
 
 }
