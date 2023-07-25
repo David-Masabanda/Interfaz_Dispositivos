@@ -86,12 +86,17 @@ class FirstFragment : Fragment() {
 
 //        chargeDataRV()
 
-        chargeDataRV3("Spider")
+//        chargeDataRV3("Spider")
+
+        chargeDataRVInit(limit,offset)
 
         binding.rvSwipe.setOnRefreshListener {
 //            chargeDataRV()
-            chargeDataRV3("Spider")
+//            chargeDataRV3("Spider")
+
+            chargeDataRVAPI(offset = offset,limit = limit)
             binding.rvSwipe.isRefreshing=false
+            gmanager.scrollToPositionWithOffset(5, 20)
         }
 
         binding.rvMarvel.addOnScrollListener (object : RecyclerView.OnScrollListener(){
@@ -107,9 +112,10 @@ class FirstFragment : Fragment() {
                         lifecycleScope.launch(Dispatchers.IO){
                             //val newItems=JikanAnimeLogic().getAllAnimes()
                             //val newItems=MarvelLogic().getAllChars("Hulk",10)
-                            val newItems=MarvelLogic().getAllMarvelChars(0,99)
+                            val newItems=MarvelLogic().getAllMarvelChars(offset,limit)
                             withContext(Dispatchers.Main){
                                 rvAdapter.updateListItems(newItems)
+                                this@FirstFragment.offset+=offset
                             }
                         }
                     }
@@ -232,8 +238,21 @@ class FirstFragment : Fragment() {
                 binding.rvMarvel,"No hay conexion", Snackbar.LENGTH_SHORT
             ).show()
         }
+    }
 
+    fun chargeDataRVAPI(limit: Int, offset: Int){
+        lifecycleScope.launch(Dispatchers.Main){
+            marvelCharsItems = withContext(Dispatchers.IO){
+                return@withContext MarvelLogic().getAllMarvelChars(offset,limit)
+            }
 
+            rvAdapter = MarvelAdapter(marvelCharsItems){sendMarvelItem(it)}
+            binding.rvMarvel.apply {
+                this.adapter = rvAdapter
+                this.layoutManager = gmanager
+            }
+            this@FirstFragment.offset = offset+limit
+        }
     }
 
 
