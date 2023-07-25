@@ -79,7 +79,7 @@ class EmptyActivity : AppCompatActivity() {
                 else -> false
             }
         }
-        startActivity(intent)
+
     }
 
 
