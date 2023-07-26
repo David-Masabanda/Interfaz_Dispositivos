@@ -22,6 +22,13 @@ class CameraActivity : AppCompatActivity() {
             val i =Intent(MediaStore.ACTION_IMAGE_CAPTURE)
             cameraResult.launch(i)
         }
+
+        binding.imgPersona.setOnClickListener{
+            val shareIntent = Intent(Intent.ACTION_SEND)
+            shareIntent.putExtra(Intent.EXTRA_TEXT, "Hola como estas")
+            shareIntent.setType("text/plain")
+            startActivity(Intent.createChooser(shareIntent, "Compartir"))
+        }
     }
 
     private val cameraResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()){
