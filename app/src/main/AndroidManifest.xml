@@ -3,12 +3,9 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-
-    <!-- Ubicacionb general, no tan precisa-->
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
-    <!-- Ubicacionb exacta-->
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" /> <!-- Ubicacionb general, no tan precisa -->
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" /> <!-- Ubicacionb exacta -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
     <application
         android:name=".ui.utilities.PruebasDispositivos"
@@ -23,6 +20,9 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
+            android:name=".ui.activities.MainActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.activities.ResultActivity"
             android:exported="false" />
         <activity
@@ -32,7 +32,7 @@
             android:name=".ui.activities.EmptyActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.activities.MainActivity"
+            android:name=".ui.activities.CameraActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
