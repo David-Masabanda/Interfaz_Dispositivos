@@ -22,12 +22,17 @@ import androidx.lifecycle.lifecycleScope
 import com.example.pruebas.R
 import com.example.pruebas.databinding.ActivityMainBinding
 import com.example.pruebas.logic.LoginValidator
+import com.google.android.gms.common.api.ResolvableApiException
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.LocationServices
+import com.google.android.gms.location.LocationSettingsRequest
+import com.google.android.gms.location.LocationSettingsStates
+import com.google.android.gms.location.LocationSettingsStatusCodes
 import com.google.android.gms.location.Priority
+import com.google.android.gms.location.SettingsClient
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -38,11 +43,16 @@ val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "se
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
-    private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
 
+    //Ubicacion y GPS
+    private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
     private lateinit var locationRequest : LocationRequest
     private lateinit var locationCallback : LocationCallback
     private var currentLocation : Location? =null
+
+    //Pide al servicio que solicite el permiso de alta precision
+    private lateinit var client : SettingsClient
+    private lateinit var locationSettingRequest : LocationSettingsRequest
 
     val speechToText = registerForActivityResult(ActivityResultContracts.StartActivityForResult()){ activityResult->
         val sn=Snackbar.make(binding.imageView, "", Snackbar.LENGTH_LONG)
@@ -86,24 +96,62 @@ class MainActivity : AppCompatActivity() {
             isGranted->
         when(isGranted){
             true->{
-                val task = fusedLocationProviderClient.lastLocation
-                task.addOnSuccessListener {location->
-                   fusedLocationProviderClient.requestLocationUpdates(
-                       locationRequest,locationCallback,Looper.getMainLooper()
-                   )
+
+                client.checkLocationSettings(locationSettingRequest).apply {
+                    addOnSuccessListener {
+                        val task = fusedLocationProviderClient.lastLocation
+                        task.addOnSuccessListener {location->
+                            fusedLocationProviderClient.requestLocationUpdates(
+                                locationRequest,
+                                locationCallback,
+                                Looper.getMainLooper()
+                            )
+                        }
+                    }
+
+                    //Cuando me da un error
+                    addOnFailureListener{ex->
+                        if (ex is ResolvableApiException){
+//                            startActivity(Intent(Settings.ACTION_LOCALE_SETTINGS))
+                            ex.startResolutionForResult(
+                                this@MainActivity,
+                                LocationSettingsStatusCodes.RESOLUTION_REQUIRED
+                            )
+                        }
+                    }
                 }
 
-                task.addOnFailureListener{
-                    val alert = AlertDialog.Builder(
-                        this, com.google.android.material.R.style.Base_ThemeOverlay_AppCompat )
-                    alert.apply {
-                        setTitle("Alerta")
-                        setMessage("Existe un problema con el sistema de posicionamiento global")
-                        setPositiveButton("OK"){dialog, id -> dialog.dismiss()}
-                        setCancelable(false)
-                    }.create()
-                    alert.show()
-                }
+
+
+
+//                val alert = AlertDialog.Builder(this).apply {
+//                    setTitle("Notificacion")
+//                    setMessage("Por favor verifique que el GPS este activo")
+//                    setPositiveButton("Verificar"){dialog, id->
+//
+//                        val i=Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)
+//                        startActivity(i)
+//                        dialog.dismiss()
+//                    }
+//                    setCancelable(false)
+//                }.show()
+
+
+
+//                task.addOnFailureListener{
+//                    val alert = AlertDialog.Builder(
+//                        this, com.google.android.material.R.style.Base_ThemeOverlay_AppCompat )
+//                    alert.apply {
+//                        setTitle("Alerta")
+//                        setMessage("Existe un problema con el sistema de posicionamiento global")
+//                        setPositiveButton("OK"){dialog, id -> dialog.dismiss()}
+//                        setCancelable(false)
+//                    }.create()
+//                    alert.show()
+//                }
+
+
+
             }
             shouldShowRequestPermissionRationale(android.Manifest.permission.ACCESS_FINE_LOCATION)->{
 
@@ -139,6 +187,12 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
+
+        client = LocationServices.getSettingsClient(this)
+        locationSettingRequest= LocationSettingsRequest.Builder()
+            .addLocationRequest(locationRequest).build()
+
+
     }
 
 
@@ -175,20 +229,24 @@ class MainActivity : AppCompatActivity() {
 //            val resIntent=Intent(this,ResultActivity::class.java)
 //            appResultLocal.launch(resIntent)
 
-            val intentSpeech = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH)
-            intentSpeech.putExtra(
-                RecognizerIntent.EXTRA_LANGUAGE_MODEL,
-                RecognizerIntent.LANGUAGE_MODEL_FREE_FORM
-            )
-            intentSpeech.putExtra(
-                RecognizerIntent.EXTRA_LANGUAGE,
-                Locale.getDefault()
-            )
-            intentSpeech.putExtra(RecognizerIntent.EXTRA_PROMPT,
-                "Di algo...")
+//            //Reconocer la voz
+//            val intentSpeech = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH)
+//            intentSpeech.putExtra(
+//                RecognizerIntent.EXTRA_LANGUAGE_MODEL,
+//                RecognizerIntent.LANGUAGE_MODEL_FREE_FORM
+//            )
+//            intentSpeech.putExtra(
+//                RecognizerIntent.EXTRA_LANGUAGE,
+//                Locale.getDefault()
+//            )
+//            intentSpeech.putExtra(RecognizerIntent.EXTRA_PROMPT,
+//                "Di algo...")
+//
+//            //La estructura debe ser lineal no puedo acceder a partes que se declaran despues
+//            speechToText.launch(intentSpeech)
 
-            //La estructura debe ser lineal no puedo acceder a partes que se declaran despues
-            speechToText.launch(intentSpeech)
+            fusedLocationProviderClient.removeLocationUpdates(locationCallback)
+
         }
 
         //Twitter
