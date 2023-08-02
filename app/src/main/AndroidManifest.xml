@@ -6,8 +6,8 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" /> <!-- Ubicacionb general, no tan precisa -->
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" /> <!-- Ubicacionb exacta -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
-    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM"/>
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
 
     <application
         android:name=".ui.utilities.PruebasDispositivos"
@@ -22,10 +22,13 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
 
-        <receiver android:name=".ui.utilities.BroadcasterNotifications"
-            android:enabled="true"/>
+        <receiver
+            android:name=".ui.utilities.BroadcasterNotifications"
+            android:enabled="true" />
 
-
+        <activity
+            android:name=".ui.activities.NotificationActivity"
+            android:exported="false" />
         <activity
             android:name=".ui.activities.CameraActivity"
             android:exported="false" />
@@ -42,7 +45,7 @@
             android:name=".ui.activities.EmptyActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.activities.NotificationActivity"
+            android:name=".ui.activities.ProgressActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
