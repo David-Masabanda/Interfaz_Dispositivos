@@ -4,19 +4,23 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.Settings
-import android.util.Log
+import android.view.View
+import androidx.activity.viewModels
 import androidx.biometric.BiometricManager
 import androidx.biometric.BiometricManager.Authenticators.BIOMETRIC_STRONG
 import androidx.biometric.BiometricManager.Authenticators.DEVICE_CREDENTIAL
 import androidx.biometric.BiometricPrompt
 import androidx.core.content.ContextCompat
-import com.example.pruebas.R
+import androidx.lifecycle.lifecycleScope
 import com.example.pruebas.databinding.ActivityBiometricBinding
+import com.example.pruebas.ui.viewmodels.BiometricViewModel
 import com.google.android.material.snackbar.Snackbar
+import kotlinx.coroutines.launch
 
 class BiometricActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityBiometricBinding
+    private val biometricViewModel by viewModels<BiometricViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -26,6 +30,22 @@ class BiometricActivity : AppCompatActivity() {
         binding.imgFinger.setOnClickListener{
             autenticateBiometric()
         }
+
+        biometricViewModel.isLoading.observe(this){
+                isLoading->
+            if (isLoading){
+                binding.linearMain.visibility = View.GONE
+                binding.linearCopia.visibility = View.VISIBLE
+            }else{
+                binding.linearMain.visibility = View.VISIBLE
+                binding.linearCopia.visibility = View.GONE
+            }
+        }
+
+        lifecycleScope.launch {
+            biometricViewModel.chargingData()
+        }
+
     }
 
     private fun checkBiometric() : Boolean{
