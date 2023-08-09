@@ -12,6 +12,7 @@ import android.os.Bundle
 import android.os.Looper
 import android.speech.RecognizerIntent
 import android.util.Log
+import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
@@ -33,7 +34,11 @@ import com.google.android.gms.location.LocationSettingsStates
 import com.google.android.gms.location.LocationSettingsStatusCodes
 import com.google.android.gms.location.Priority
 import com.google.android.gms.location.SettingsClient
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.util.Locale
@@ -43,6 +48,11 @@ val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "se
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
+
+    private lateinit var auth: FirebaseAuth
+
+
+
 
     //Ubicacion y GPS
     private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
@@ -169,6 +179,16 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        auth = Firebase.auth
+
+
+        binding.btnIngresar.setOnClickListener{
+            authWithFirebaseEmail(
+                binding.txtUser.text.toString(),
+                binding.editTextTextPassword.text.toString()
+            )
+        }
+
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
 
         locationRequest = LocationRequest.Builder(
@@ -195,12 +215,76 @@ class MainActivity : AppCompatActivity() {
 
     }
 
+    private fun authWithFirebaseEmail(email :  String, password: String) {
+        auth.createUserWithEmailAndPassword(email, password)
+            .addOnCompleteListener(this) { task ->
+                if (task.isSuccessful) {
+                    // Sign in success, update UI with the signed-in user's information
+                    Log.d(Constans.TAG, "createUserWithEmail:success")
+                    val user = auth.currentUser
+                    Toast.makeText(
+                        baseContext,
+                        "Authentication exitosa",
+                        Toast.LENGTH_SHORT,
+                    ).show()
 
+                } else {
+                    // If sign in fails, display a message to the user.
+                    Log.w(Constans.TAG, "Fallo en la creacion de usuarios", task.exception)
+                    Toast.makeText(
+                        baseContext,
+                        "Authentication failed.",
+                        Toast.LENGTH_SHORT,
+                    ).show()
+
+                }
+            }
+    }
+
+    private fun signInWithEmailAndPassword(email :  String, password: String) {
+        auth.signInWithEmailAndPassword(email, password)
+            .addOnCompleteListener(this) { task ->
+                if (task.isSuccessful) {
+                    // Sign in success, update UI with the signed-in user's information
+                    Log.d(Constans.TAG, "signInWithEmail:success")
+                    val user = auth.currentUser
+
+                } else {
+                    // If sign in fails, display a message to the user.
+                    Log.w(Constans.TAG, "signInWithEmail:failure", task.exception)
+                    Toast.makeText(
+                        baseContext,
+                        "Authentication failed.",
+                        Toast.LENGTH_SHORT,
+                    ).show()
+                }
+            }
+    }
+
+    private fun recoveryPasswordWithEmail(email :  String){
+        auth.sendPasswordResetEmail(email)
+            .addOnCompleteListener{task->
+                if (task.isSuccessful){
+                    Toast.makeText(
+                        baseContext,
+                        "Correo de verificacion enviado",
+                        Toast.LENGTH_SHORT,
+                    ).show()
+
+                    MaterialAlertDialogBuilder(this).apply {
+                        setTitle("Alert")
+                        setMessage("Correo de recuperacion enviado correctamente")
+                        setCancelable(true)
+                    }.show()
+                }
+
+            }
+    }
 
 
     override fun onStart() {
         super.onStart()
-        initClass()
+        //initClass()
 
         //Importar el Register
         //Es un contrato y las clausulas que debera comprobar cuando se lance ese contrato
@@ -271,30 +355,30 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    private fun initClass() {
-        binding.btnIngresar.setOnClickListener {
-            val name = binding.txtUser.text.toString()
-            Log.d("EmptyActivity", "El nombre de usuario es: $name")
-            val password = binding.editTextTextPassword.text.toString()
-            Log.d("EmptyActivity", "La clave de usuario es: $password")
-
-            val check = LoginValidator().checkLogin(name, password)
-            if (check) {
-                lifecycleScope.launch(Dispatchers.IO){
-                    saveDataStore(name)
-                }
-                var intent = Intent(this, EmptyActivity::class.java)
-                intent.putExtra("nameUser", name)
-                startActivity(intent)
-            } else {
-                Snackbar.make(
-                    binding.root,
-                    "Usuario y contraseña inválidos",
-                    Snackbar.LENGTH_LONG
-                ).show()
-            }
-        }
-    }
+//    private fun initClass() {
+//        binding.btnIngresar.setOnClickListener {
+//            val name = binding.txtUser.text.toString()
+//            Log.d("EmptyActivity", "El nombre de usuario es: $name")
+//            val password = binding.editTextTextPassword.text.toString()
+//            Log.d("EmptyActivity", "La clave de usuario es: $password")
+//
+//            val check = LoginValidator().checkLogin(name, password)
+//            if (check) {
+//                lifecycleScope.launch(Dispatchers.IO){
+//                    saveDataStore(name)
+//                }
+//                var intent = Intent(this, EmptyActivity::class.java)
+//                intent.putExtra("nameUser", name)
+//                startActivity(intent)
+//            } else {
+//                Snackbar.make(
+//                    binding.root,
+//                    "Usuario y contraseña inválidos",
+//                    Snackbar.LENGTH_LONG
+//                ).show()
+//            }
+//        }
+//    }
 
 
     private suspend fun saveDataStore(stringData: String){

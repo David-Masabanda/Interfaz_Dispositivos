@@ -1,6 +1,8 @@
 package com.example.pruebas.ui.activities
 
 import android.content.Intent
+
+
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.Settings
@@ -10,6 +12,7 @@ import androidx.biometric.BiometricManager
 import androidx.biometric.BiometricManager.Authenticators.BIOMETRIC_STRONG
 import androidx.biometric.BiometricManager.Authenticators.DEVICE_CREDENTIAL
 import androidx.biometric.BiometricPrompt
+
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import com.example.pruebas.databinding.ActivityBiometricBinding
@@ -49,6 +52,7 @@ class BiometricActivity : AppCompatActivity() {
     }
 
     private fun checkBiometric() : Boolean{
+
         val biometricManager = BiometricManager.from(this)
         var returnValid = false
 
