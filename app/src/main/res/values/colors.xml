@@ -12,7 +12,12 @@
     <color name="orange">#FF5722</color>
     <color name="blue">#86B8F6</color>
     <color name="red">#FA9090</color>
+    <color name="redApp">#F8B3B3</color>
     <color name="gris">#CBD2DA</color>
+    <color name="rojo">#F82C39</color>
+
+    <color name="user1">#CCB6F4</color>
+    <color name="user2">#9CA6AA</color>
 
 
 </resources>

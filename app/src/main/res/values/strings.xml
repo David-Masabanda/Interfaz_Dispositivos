@@ -2,4 +2,20 @@
     <string name="app_name">PruebasDispositivos</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string name="mensaje_app">Bienvenido Usuario</string>
+    <string name="saludo_app">¡Hola! Es bueno verte de nuevo</string>
+    <string name="correo_ejemplo">example@email.com</string>
+
+    <string name="saludo_intro">Bienvenido a la aplicacion MARVEL</string>
+
+    <string name="intro_us">Para empezar, selecciona el menú <b>&quot;Perfil&quot;</b> y
+        empieza a personalizar tu estado.
+        Dentro de <b>&quot;API&quot;</b> puedes ver una lista de
+        todos los héroes que forman parte de Marvel.
+        Para una busqueda mas especial ve a <b>&quot;Search&quot;</b>, podrás buscar un héroe favorito y guardarlo.
+        Los personajes seleccionados estaran disponibles en tu pantalla principal una vez que los hayas guardado. Solo recarga la lista
+    </string>
+
+
 </resources>

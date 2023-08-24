@@ -7,6 +7,7 @@ import android.content.Context
 import android.content.Intent
 import android.location.Geocoder
 import android.location.Location
+import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Looper
@@ -48,21 +49,10 @@ val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "se
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
-
     private lateinit var auth: FirebaseAuth
 
+    var userImageSelected = false
 
-
-
-    //Ubicacion y GPS
-    private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
-    private lateinit var locationRequest : LocationRequest
-    private lateinit var locationCallback : LocationCallback
-    private var currentLocation : Location? =null
-
-    //Pide al servicio que solicite el permiso de alta precision
-    private lateinit var client : SettingsClient
-    private lateinit var locationSettingRequest : LocationSettingsRequest
 
     val speechToText = registerForActivityResult(ActivityResultContracts.StartActivityForResult()){ activityResult->
         val sn=Snackbar.make(binding.imageView, "", Snackbar.LENGTH_LONG)
@@ -101,78 +91,6 @@ class MainActivity : AppCompatActivity() {
         sn.show()
     }
 
-    @SuppressLint("MissingPermission")
-    val locationContract = registerForActivityResult(ActivityResultContracts.RequestPermission()){
-            isGranted->
-        when(isGranted){
-            true->{
-
-                client.checkLocationSettings(locationSettingRequest).apply {
-                    addOnSuccessListener {
-                        val task = fusedLocationProviderClient.lastLocation
-                        task.addOnSuccessListener {location->
-                            fusedLocationProviderClient.requestLocationUpdates(
-                                locationRequest,
-                                locationCallback,
-                                Looper.getMainLooper()
-                            )
-                        }
-                    }
-
-                    //Cuando me da un error
-                    addOnFailureListener{ex->
-                        if (ex is ResolvableApiException){
-//                            startActivity(Intent(Settings.ACTION_LOCALE_SETTINGS))
-                            ex.startResolutionForResult(
-                                this@MainActivity,
-                                LocationSettingsStatusCodes.RESOLUTION_REQUIRED
-                            )
-                        }
-                    }
-                }
-
-
-
-
-//                val alert = AlertDialog.Builder(this).apply {
-//                    setTitle("Notificacion")
-//                    setMessage("Por favor verifique que el GPS este activo")
-//                    setPositiveButton("Verificar"){dialog, id->
-//
-//                        val i=Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)
-//                        startActivity(i)
-//                        dialog.dismiss()
-//                    }
-//                    setCancelable(false)
-//                }.show()
-
-
-
-//                task.addOnFailureListener{
-//                    val alert = AlertDialog.Builder(
-//                        this, com.google.android.material.R.style.Base_ThemeOverlay_AppCompat )
-//                    alert.apply {
-//                        setTitle("Alerta")
-//                        setMessage("Existe un problema con el sistema de posicionamiento global")
-//                        setPositiveButton("OK"){dialog, id -> dialog.dismiss()}
-//                        setCancelable(false)
-//                    }.create()
-//                    alert.show()
-//                }
-
-
-
-            }
-            shouldShowRequestPermissionRationale(android.Manifest.permission.ACCESS_FINE_LOCATION)->{
-
-            }
-            false->{
-                Snackbar.make(binding.imageView, "Permiso denegado", Snackbar.LENGTH_SHORT).show()
-            }
-        }
-    }
-
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -183,34 +101,35 @@ class MainActivity : AppCompatActivity() {
 
 
         binding.btnIngresar.setOnClickListener{
+            signInWithEmailAndPassword(
+                binding.txtUser.text.toString(),
+                binding.txtPassword.text.toString()
+            )
+            var intent = Intent(this, EmptyActivity::class.java)
+            startActivity(intent)
+        }
+
+        binding.btnRegistrar.setOnClickListener{
             authWithFirebaseEmail(
                 binding.txtUser.text.toString(),
-                binding.editTextTextPassword.text.toString()
+                binding.txtPassword.text.toString()
             )
         }
 
-        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
 
-        locationRequest = LocationRequest.Builder(
-            Priority.PRIORITY_HIGH_ACCURACY,1000
-        ).build()
-
-        locationCallback = object : LocationCallback(){
-            override fun onLocationResult(locationResult : LocationResult) {
-                super.onLocationResult(locationResult)
-
-                if(locationResult!=null){
-                    locationResult.locations.forEach{ location->
-                        currentLocation = location
-                        Log.d("UCE", "Ubicacion: ${location.latitude},"+"${location.longitude}")
-                    }
-                }
-            }
+        binding.btnFacebook.setOnClickListener{
+            val intent= Intent(Intent.ACTION_VIEW,
+                Uri.parse("https://es-la.facebook.com/"))
+            startActivity(intent)
         }
 
-        client = LocationServices.getSettingsClient(this)
-        locationSettingRequest= LocationSettingsRequest.Builder()
-            .addLocationRequest(locationRequest).build()
+
+        binding.btnTwitter.setOnClickListener{
+            val intent= Intent(Intent.ACTION_VIEW,
+                Uri.parse("https://twitter.com/?lang=es"))
+            startActivity(intent)
+        }
+
 
 
     }
@@ -219,7 +138,6 @@ class MainActivity : AppCompatActivity() {
         auth.createUserWithEmailAndPassword(email, password)
             .addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
-                    // Sign in success, update UI with the signed-in user's information
                     Log.d(Constans.TAG, "createUserWithEmail:success")
                     val user = auth.currentUser
                     Toast.makeText(
@@ -229,7 +147,6 @@ class MainActivity : AppCompatActivity() {
                     ).show()
 
                 } else {
-                    // If sign in fails, display a message to the user.
                     Log.w(Constans.TAG, "Fallo en la creacion de usuarios", task.exception)
                     Toast.makeText(
                         baseContext,
@@ -245,12 +162,10 @@ class MainActivity : AppCompatActivity() {
         auth.signInWithEmailAndPassword(email, password)
             .addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
-                    // Sign in success, update UI with the signed-in user's information
                     Log.d(Constans.TAG, "signInWithEmail:success")
                     val user = auth.currentUser
 
                 } else {
-                    // If sign in fails, display a message to the user.
                     Log.w(Constans.TAG, "signInWithEmail:failure", task.exception)
                     Toast.makeText(
                         baseContext,
@@ -306,10 +221,10 @@ class MainActivity : AppCompatActivity() {
             sn.show()
         }
 
-
+/*
 
         //Face
-        binding.imageButton.setOnClickListener{
+        binding.btnFacebook.setOnClickListener{
 //            val resIntent=Intent(this,ResultActivity::class.java)
 //            appResultLocal.launch(resIntent)
 
@@ -328,13 +243,13 @@ class MainActivity : AppCompatActivity() {
 //
 //            //La estructura debe ser lineal no puedo acceder a partes que se declaran despues
 //            speechToText.launch(intentSpeech)
-
-            fusedLocationProviderClient.removeLocationUpdates(locationCallback)
-
         }
 
+ */
+
+        /*
         //Twitter
-        binding.imageButton2.setOnClickListener{
+        binding.btnTwitter.setOnClickListener{
 //            val intent= Intent(Intent.ACTION_VIEW,
 //                Uri.parse("https://twitter.com/i/flow/login?redirect_after_login=%2F%3Flang%3Des"))
 
@@ -347,51 +262,15 @@ class MainActivity : AppCompatActivity() {
 //            )
 //            intent.putExtra(SearchManager.QUERY, binding.editTextTextPassword.text)
 //            startActivity(intent)
-
-            locationContract.launch(android.Manifest.permission.ACCESS_FINE_LOCATION)
         }
 
+         */
 
-
-    }
-
-//    private fun initClass() {
-//        binding.btnIngresar.setOnClickListener {
-//            val name = binding.txtUser.text.toString()
-//            Log.d("EmptyActivity", "El nombre de usuario es: $name")
-//            val password = binding.editTextTextPassword.text.toString()
-//            Log.d("EmptyActivity", "La clave de usuario es: $password")
-//
-//            val check = LoginValidator().checkLogin(name, password)
-//            if (check) {
-//                lifecycleScope.launch(Dispatchers.IO){
-//                    saveDataStore(name)
-//                }
-//                var intent = Intent(this, EmptyActivity::class.java)
-//                intent.putExtra("nameUser", name)
-//                startActivity(intent)
-//            } else {
-//                Snackbar.make(
-//                    binding.root,
-//                    "Usuario y contraseña inválidos",
-//                    Snackbar.LENGTH_LONG
-//                ).show()
-//            }
-//        }
-//    }
-
-
-    private suspend fun saveDataStore(stringData: String){
-        dataStore.edit { prefs->
-            prefs[stringPreferencesKey("usuario")] = stringData
-            prefs[stringPreferencesKey("sesion")] = UUID.randomUUID().toString()
-            prefs[stringPreferencesKey("email")] = "jdmasabanda@uce.edu.com"
-        }
     }
 
     override fun onPause() {
         super.onPause()
-        fusedLocationProviderClient.removeLocationUpdates(locationCallback)
+
     }
 
 }

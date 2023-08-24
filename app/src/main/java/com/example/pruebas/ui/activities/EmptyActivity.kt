@@ -4,7 +4,9 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.viewmodel.CreationExtras
 import com.example.pruebas.R
 import com.example.pruebas.databinding.ActivityEmptyBinding
@@ -24,35 +26,17 @@ class EmptyActivity : AppCompatActivity() {
         binding = ActivityEmptyBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val nameUser = intent.getStringExtra("nameUser")
-        val welcomeMessage = "¡Bienvenido, $nameUser!"
-
-        if(!nameUser.isNullOrEmpty()){
-            Toast.makeText(this, welcomeMessage, Toast.LENGTH_SHORT).show()
-        }else{
-            Snackbar.make(binding.txtSaludo, "Fallo en la verificacion", Snackbar.LENGTH_SHORT).show()
-        }
-
+        val welcomeMessage = "¡Bienvenido!"
+        Toast.makeText(this, welcomeMessage, Toast.LENGTH_SHORT).show()
         Log.d("UCE", "Empty Activity")
     }
 
     override fun onStart() {
         super.onStart()
-
-//        FragmentsManager().replaceFragment(
-//            supportFragmentManager,
-//            binding.frmContainer.id,
-//            FirstFragment()
-//        )
-
         initClass()
     }
 
     private fun initClass() {
-
-//        val nameUser = intent.getStringExtra("nameUser")
-//        binding.txtSaludo.text = "Bienvenido, $nameUser"
-
 
         binding.btnRegreso.setOnClickListener {
             val intent = Intent(this, MainActivity::class.java)
@@ -60,34 +44,59 @@ class EmptyActivity : AppCompatActivity() {
         }
 
         binding.bottomNavigation.setOnItemSelectedListener { item ->
+
             when(item.itemId) {
+
                 R.id.option_1 -> {
-                    FragmentsManager().replaceFragment(
-                        supportFragmentManager,
-                        binding.frmContainer.id,
-                        FirstFragment()
-                    )
-                    true
-                }
-                R.id.option_2 -> {
-                    FragmentsManager().replaceFragment(
-                        supportFragmentManager,
-                        binding.frmContainer.id,
-                        SecondFragment()
-                    )
-                    true
-                }
-                R.id.option_3 -> {
+                    hideLayout()
                     FragmentsManager().replaceFragment(
                         supportFragmentManager,
                         binding.frmContainer.id,
                         ThirdFragment()
                     )
+                    binding.root.setBackgroundColor(ContextCompat.getColor(this, R.color.white))
+                    true
+                }
+                R.id.option_2 -> {
+                    hideLayout()
+                    FragmentsManager().replaceFragment(
+                        supportFragmentManager,
+                        binding.frmContainer.id,
+                        FirstFragment()
+                    )
+                    binding.root.setBackgroundColor(ContextCompat.getColor(this, R.color.white))
+                    true
+                }
+                R.id.option_3 -> {
+                    hideLayout()
+                    FragmentsManager().replaceFragment(
+                        supportFragmentManager,
+                        binding.frmContainer.id,
+                        SecondFragment()
+                    )
+                    binding.root.setBackgroundColor(ContextCompat.getColor(this, R.color.white))
                     true
                 }
                 else -> false
             }
         }
 
+
+    }
+
+    private fun hideLayout() {
+        binding.txtSaludo.visibility = View.GONE
+        binding.txtMensaje.visibility = View.GONE
+        binding.imgEspera.visibility = View.GONE
+        binding.btnRegreso.visibility = View.GONE
+
+    }
+
+    private fun showLayout() {
+        binding.txtSaludo.visibility = View.VISIBLE
+        binding.txtMensaje.visibility = View.VISIBLE
+        binding.imgEspera.visibility = View.VISIBLE
+        binding.btnRegreso.visibility = View.VISIBLE
+        binding.frmContainer.visibility = View.VISIBLE
     }
 }

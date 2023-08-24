@@ -20,7 +20,7 @@
     </style>
 
     <style name="ActiveIndicator" parent="Widget.Material3.BottomNavigationView.ActiveIndicator">
-        <item name="android:color">@color/blue</item>
+        <item name="android:color">@color/low_gray</item>
     </style>
 
 </resources>
