@@ -44,21 +44,10 @@
         android:layout_marginTop="35dp"
         android:background="@drawable/spider_intro"
         app:layout_constraintTop_toBottomOf="@id/txtMensaje"
-        app:layout_constraintBottom_toTopOf="@id/btnRegreso"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
 
-    <Button
-        android:id="@+id/btnRegreso"
-        android:layout_width="129dp"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginTop="20dp"
-        android:text="Regresar"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.514"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imgEspera" />
+
 
 
     <FrameLayout

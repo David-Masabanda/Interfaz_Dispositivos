@@ -5,6 +5,7 @@ import com.example.pruebas.data.entities.marvel.database.MarvelCharsDB
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
+
 data class MarvelChars(
     val id: Int,
     val nombre: String,

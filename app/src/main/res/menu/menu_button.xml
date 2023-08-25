@@ -19,5 +19,11 @@
         android:icon="@drawable/baseline_search"
         android:title="Search"
         android:visible="true" />
+    <item
+        android:id="@+id/option_4"
+        android:enabled="true"
+        android:icon="@drawable/baseline_exit"
+        android:title="Cerrar"
+        android:visible="true" />
 
 </menu>

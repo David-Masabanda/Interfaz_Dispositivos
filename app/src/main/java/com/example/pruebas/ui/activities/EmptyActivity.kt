@@ -31,6 +31,15 @@ class EmptyActivity : AppCompatActivity() {
         val welcomeMessage = "¡Bienvenido!"
         Toast.makeText(this, welcomeMessage, Toast.LENGTH_SHORT).show()
         Log.d("UCE", "Empty Activity")
+
+        val fragmentTag = intent.getStringExtra("fragmentToLoad")
+        if (fragmentTag != null) {
+            hideLayout()
+            when (fragmentTag) {
+                "third_fragment" -> loadYourFragment()
+
+            }
+        }
     }
 
     override fun onStart() {
@@ -41,17 +50,10 @@ class EmptyActivity : AppCompatActivity() {
 
     private fun initClass() {
 
-        binding.btnRegreso.setOnClickListener {
 
-            Toast.makeText(this, "Hasta la proxima", Toast.LENGTH_SHORT).show()
-            val intent = Intent(this, MainActivity::class.java)
-            startActivity(intent)
-        }
 
         binding.bottomNavigation.setOnItemSelectedListener { item ->
-
             when(item.itemId) {
-
                 R.id.option_1 -> {
                     hideLayout()
                     FragmentsManager().replaceFragment(
@@ -82,6 +84,12 @@ class EmptyActivity : AppCompatActivity() {
                     binding.root.setBackgroundColor(ContextCompat.getColor(this, R.color.white))
                     true
                 }
+                R.id.option_4 -> {
+                    Toast.makeText(this, "Hasta la proxima", Toast.LENGTH_SHORT).show()
+                    val intent = Intent(this, MainActivity::class.java)
+                    startActivity(intent)
+                    true
+                }
                 else -> false
             }
         }
@@ -89,18 +97,19 @@ class EmptyActivity : AppCompatActivity() {
 
     }
 
-    override fun onBackPressed() {
-        if (supportFragmentManager.backStackEntryCount <= 1) {
-            showLayout()
-        }
-        super.onBackPressed()
+    private fun loadYourFragment() {
+        val fragment = ThirdFragment() // Crea una instancia de tu fragmento
+        val transaction = supportFragmentManager.beginTransaction()
+        transaction.replace(binding.frmContainer.id, fragment) // R.id.fragment_container es el contenedor en tu layout de actividad
+        transaction.commit()
     }
+
+
 
     private fun hideLayout() {
         binding.txtSaludo.visibility = View.GONE
         binding.txtMensaje.visibility = View.GONE
         binding.imgEspera.visibility = View.GONE
-        binding.btnRegreso.visibility = View.GONE
 
 
     }
@@ -109,8 +118,10 @@ class EmptyActivity : AppCompatActivity() {
         binding.txtSaludo.visibility = View.VISIBLE
         binding.txtMensaje.visibility = View.VISIBLE
         binding.imgEspera.visibility = View.VISIBLE
-        binding.btnRegreso.visibility = View.VISIBLE
+
 
     }
+
+
 
 }

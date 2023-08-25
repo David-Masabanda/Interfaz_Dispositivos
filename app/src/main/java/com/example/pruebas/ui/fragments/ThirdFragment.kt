@@ -18,6 +18,8 @@ import androidx.appcompat.app.AlertDialog
 import com.bumptech.glide.Glide
 import com.example.pruebas.R
 import com.example.pruebas.databinding.FragmentThirdBinding
+import com.example.pruebas.ui.activities.BiometricActivity
+import com.example.pruebas.ui.activities.EmptyActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
@@ -92,6 +94,11 @@ class ThirdFragment : Fragment() {
             dialog.show()
         }
 
+        binding.btnEditar.setOnClickListener {
+            var intent = Intent(requireContext(), BiometricActivity::class.java)
+            startActivity(intent)
+        }
+
     }
 
 
@@ -117,7 +124,7 @@ class ThirdFragment : Fragment() {
                     } else {
                         Log.d("UCE","Llega a esta parte")
                         // No hay URL de imagen en la base de datos, muestra la imagen por defecto
-                        binding.userImagen.setImageResource(R.drawable.avatar) // Imagen por defecto
+                        binding.userImagen.setImageResource(R.drawable.avatar)
 
                     }
                 }

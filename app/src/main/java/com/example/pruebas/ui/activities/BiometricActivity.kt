@@ -6,6 +6,7 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.Settings
+import android.text.Editable
 import android.view.View
 import androidx.activity.viewModels
 import androidx.biometric.BiometricManager
@@ -15,38 +16,60 @@ import androidx.biometric.BiometricPrompt
 
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
+import com.bumptech.glide.Glide
+import com.example.pruebas.R
 import com.example.pruebas.databinding.ActivityBiometricBinding
 import com.example.pruebas.ui.viewmodels.BiometricViewModel
 import com.google.android.material.snackbar.Snackbar
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
+import com.squareup.picasso.Picasso
 import kotlinx.coroutines.launch
 
 class BiometricActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityBiometricBinding
-    private val biometricViewModel by viewModels<BiometricViewModel>()
+    private lateinit var auth: FirebaseAuth
+    private lateinit var firestore: FirebaseFirestore
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding=ActivityBiometricBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        binding.imgFinger.setOnClickListener{
-            autenticateBiometric()
+//        binding.imgFinger.setOnClickListener{
+//            autenticateBiometric()
+//        }
+
+        hideLayout()
+
+    }
+
+    override fun onStart() {
+        super.onStart()
+
+        Glide.with(this)
+            .asGif()
+            .load(R.drawable.actualizar)
+            .into(binding.imgCarga);
+
+        auth = FirebaseAuth.getInstance()
+        firestore = FirebaseFirestore.getInstance()
+
+
+
+        loadUserData()
+
+        autenticateBiometric()
+
+        binding.saveButton.setOnClickListener {
+            updateUserData()
         }
 
-        biometricViewModel.isLoading.observe(this){
-                isLoading->
-            if (isLoading){
-                binding.linearMain.visibility = View.GONE
-                binding.linearCopia.visibility = View.VISIBLE
-            }else{
-                binding.linearMain.visibility = View.VISIBLE
-                binding.linearCopia.visibility = View.GONE
-            }
-        }
-
-        lifecycleScope.launch {
-            biometricViewModel.chargingData()
+        binding.btnHome.setOnClickListener {
+            var intent = Intent(this, EmptyActivity::class.java)
+            intent.putExtra("fragmentToLoad", "third_fragment")
+            startActivity(intent)
         }
 
     }
@@ -86,7 +109,6 @@ class BiometricActivity : AppCompatActivity() {
             val biometricPrompt = BiometricPrompt.PromptInfo.Builder()
                 .setTitle("Autenticacion Requerida")
                 .setSubtitle("Ingrese su huella digital")
-                .setDescription("Coloque su dedo")
                 .setAllowedAuthenticators(BIOMETRIC_STRONG or DEVICE_CREDENTIAL)
 
                 .build()
@@ -100,7 +122,7 @@ class BiometricActivity : AppCompatActivity() {
 
                     override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult) {
                         super.onAuthenticationSucceeded(result)
-                        startActivity(Intent(this@BiometricActivity, CameraActivity::class.java))
+                        showLayout()
                     }
 
                     override fun onAuthenticationFailed() {
@@ -109,11 +131,80 @@ class BiometricActivity : AppCompatActivity() {
                 })
             biometricManager.authenticate(biometricPrompt)
         }else{
-            Snackbar.make(binding.txtBio, "No existen los requisitos necesarios", Snackbar.LENGTH_SHORT).show()
+            Snackbar.make(binding.saveAddress, "No existen los requisitos necesarios", Snackbar.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun loadUserData() {
+        val user = auth.currentUser
+        if (user != null) {
+            val userDocRef = firestore.collection("users").document(user.uid)
+            userDocRef.get().addOnSuccessListener { documentSnapshot ->
+                if (documentSnapshot.exists()) {
+                    val userData = documentSnapshot.data
+                    binding.saveName.text = Editable.Factory.getInstance().newEditable(userData?.get("name") as? String)
+                    binding.saveCorreo.text = Editable.Factory.getInstance().newEditable(userData?.get("email") as? String)
+                    binding.saveAddress.text = Editable.Factory.getInstance().newEditable(userData?.get("address") as? String)
+                    binding.savePhone.text = Editable.Factory.getInstance().newEditable(userData?.get("phone") as? String)
+                    val imageUrl = userData?.get("image_url") as? String
+                    Picasso.get().load(imageUrl).into(binding.imgPerfil)
+                }
+            }
+        }
+    }
+
+    private fun updateUserData() {
+        val user = auth.currentUser
+        if (user != null) {
+            val userDocRef = firestore.collection("users").document(user.uid)
+
+            val newName = binding.saveName.text.toString()
+            val newCorreo = binding.saveCorreo.text.toString()
+            val newAddress = binding.saveAddress.text.toString()
+            val newPhone = binding.savePhone.text.toString()
+
+            val userDataUpdates = hashMapOf(
+                "name" to newName,
+                "email" to newCorreo,
+                "address" to newAddress,
+                "phone" to newPhone
+            )
+
+            userDocRef.update(userDataUpdates as Map<String, Any>)
+                .addOnSuccessListener {
+                    Snackbar.make(binding.root, "Datos actualizados correctamente", Snackbar.LENGTH_SHORT).show()
+                }
+                .addOnFailureListener {
+                    Snackbar.make(binding.root, "Error al actualizar los datos", Snackbar.LENGTH_SHORT).show()
+                }
         }
     }
 
 
+    private fun hideLayout() {
+        binding.saveName.visibility = View.GONE
+        binding.saveCorreo.visibility = View.GONE
+        binding.saveAddress.visibility = View.GONE
+        binding.savePhone.visibility = View.GONE
 
+        binding.btnHome.visibility = View.GONE
+        binding.saveButton.visibility = View.GONE
+        binding.info.visibility = View.GONE
+        binding.imgPerfil.visibility = View.GONE
+        binding.imgCarga.visibility = View.GONE
+    }
+
+    private fun showLayout() {
+        binding.saveName.visibility = View.VISIBLE
+        binding.saveCorreo.visibility = View.VISIBLE
+        binding.saveAddress.visibility = View.VISIBLE
+        binding.savePhone.visibility = View.VISIBLE
+
+        binding.btnHome.visibility = View.VISIBLE
+        binding.saveButton.visibility = View.VISIBLE
+        binding.info.visibility = View.VISIBLE
+        binding.imgPerfil.visibility = View.VISIBLE
+        binding.imgCarga.visibility = View.VISIBLE
+    }
 
 }
