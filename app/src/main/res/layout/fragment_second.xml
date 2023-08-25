@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@drawable/gradiente4"
     tools:context=".ui.fragments.SecondFragment">
 
     <LinearLayout
@@ -11,37 +12,61 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <!-- CardView original -->
+
         <androidx.cardview.widget.CardView
             android:id="@+id/cardFr2"
             android:layout_width="match_parent"
-            android:layout_height="150dp"
+            android:layout_height="200dp"
             android:elevation="10dp"
             android:layout_margin="35dp"
             app:cardCornerRadius="12dp"
             tools:ignore="MissingConstraints">
 
-            <ImageView
-                android:src="@drawable/busqueda"
-                android:layout_width="match_parent"
-                android:layout_height="100dp"/>
-
-            <TextView
-                android:id="@+id/texto2"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:fontFamily="sans-serif-black"
-                android:gravity="bottom|center_horizontal"
-                android:text="Buscar Personaje"
-                android:textSize="42sp" />
+                android:orientation="vertical"
+                android:gravity="center">
+
+                <ImageView
+                    android:src="@drawable/busqueda"
+                    android:layout_width="match_parent"
+                    android:layout_height="150dp" />
+
+                <TextView
+                    android:id="@+id/texto2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="50dp"
+                    android:fontFamily="sans-serif-black"
+                    android:gravity="bottom|center_horizontal"
+                    android:text="Buscar Personaje"
+                    android:textSize="35sp" />
+
+            </LinearLayout>
+
         </androidx.cardview.widget.CardView>
 
-        <!-- Nuevos elementos debajo del CardView -->
-        <EditText
-            android:id="@+id/txtBuscar"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:ems="10"/>
+            android:orientation="horizontal"
+            android:gravity="center">
+
+            <EditText
+                android:id="@+id/txtBuscar"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:ems="10"/>
+
+            <ImageButton
+                android:id="@+id/btnVoz"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:src="@drawable/baseline_voice"
+               />
+
+        </LinearLayout>
+
 
         <ProgressBar
             android:id="@+id/progressBar"
@@ -58,24 +83,5 @@
 
     </LinearLayout>
 
-
-
-    <!--<Spinner
-        android:id="@+id/spinn"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/cardFr2"
-        app:layout_constraintTop_toBottomOf="@id/cardFr2"/>
-
-    <ListView
-        android:id="@+id/list2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/spinn"
-        app:layout_constraintTop_toBottomOf="@id/spinn"
-        android:layout_marginStart="25dp"
-        android:layout_marginTop="25dp"
-        android:layout_marginEnd="25dp"
-        android:layout_marginBottom="25dp" />-->
 
 </androidx.constraintlayout.widget.ConstraintLayout>

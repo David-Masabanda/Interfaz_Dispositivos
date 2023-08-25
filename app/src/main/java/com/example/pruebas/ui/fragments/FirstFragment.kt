@@ -228,8 +228,8 @@ class FirstFragment : Fragment() {
                 rvAdapter=MarvelAdapter(marvelCharsItems){sendMarvelItem(it)}
                 binding.rvMarvel.apply {
                     this.adapter=rvAdapter
-//                    this.layoutManager=lmanager
-                    this.layoutManager=gmanager
+                    this.layoutManager=lmanager
+//                    this.layoutManager=gmanager
                 }
                 this@FirstFragment.offset+=limit
             }
@@ -249,7 +249,7 @@ class FirstFragment : Fragment() {
             rvAdapter = MarvelAdapter(marvelCharsItems){sendMarvelItem(it)}
             binding.rvMarvel.apply {
                 this.adapter = rvAdapter
-                this.layoutManager = gmanager
+                this.layoutManager = lmanager
             }
             this@FirstFragment.offset = offset+limit
         }

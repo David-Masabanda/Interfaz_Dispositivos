@@ -18,6 +18,7 @@
 
     <color name="user1">#CCB6F4</color>
     <color name="user2">#9CA6AA</color>
+    <color name="vacio">#00FFFFFF</color>
 
 
 </resources>

@@ -60,14 +60,10 @@
                     android:text="john@example.com"
                     android:textSize="14sp" />
 
+
+
                 <TextView
-                    android:id="@+id/userEdad"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="25 years old"
-                    android:textSize="14sp" />
-                <TextView
-                    android:id="@+id/userSigno"
+                    android:id="@+id/userDireccion"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Acuario"
@@ -98,7 +94,6 @@
                     android:id="@+id/userImagen"
                     android:layout_width="170dp"
                     android:layout_height="170dp"
-                    android:src="@drawable/avatar"
                     android:scaleType="centerCrop"/>
 
                 <ImageButton

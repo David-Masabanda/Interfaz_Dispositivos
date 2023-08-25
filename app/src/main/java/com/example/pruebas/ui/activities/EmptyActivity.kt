@@ -16,10 +16,12 @@ import com.example.pruebas.ui.fragments.SecondFragment
 import com.example.pruebas.ui.fragments.ThirdFragment
 import com.example.pruebas.ui.utilities.FragmentsManager
 import com.google.android.material.snackbar.Snackbar
+import com.google.firebase.auth.FirebaseAuth
 
 class EmptyActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityEmptyBinding
+    private lateinit var auth: FirebaseAuth
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,11 +36,14 @@ class EmptyActivity : AppCompatActivity() {
     override fun onStart() {
         super.onStart()
         initClass()
+
     }
 
     private fun initClass() {
 
         binding.btnRegreso.setOnClickListener {
+
+            Toast.makeText(this, "Hasta la proxima", Toast.LENGTH_SHORT).show()
             val intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
         }
@@ -84,11 +89,19 @@ class EmptyActivity : AppCompatActivity() {
 
     }
 
+    override fun onBackPressed() {
+        if (supportFragmentManager.backStackEntryCount <= 1) {
+            showLayout()
+        }
+        super.onBackPressed()
+    }
+
     private fun hideLayout() {
         binding.txtSaludo.visibility = View.GONE
         binding.txtMensaje.visibility = View.GONE
         binding.imgEspera.visibility = View.GONE
         binding.btnRegreso.visibility = View.GONE
+
 
     }
 
@@ -97,6 +110,7 @@ class EmptyActivity : AppCompatActivity() {
         binding.txtMensaje.visibility = View.VISIBLE
         binding.imgEspera.visibility = View.VISIBLE
         binding.btnRegreso.visibility = View.VISIBLE
-        binding.frmContainer.visibility = View.VISIBLE
+
     }
+
 }
