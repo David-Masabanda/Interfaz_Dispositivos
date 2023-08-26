@@ -1,12 +1,21 @@
 package com.example.pruebas.ui.adapters
 
+import android.media.MediaPlayer
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.recyclerview.widget.RecyclerView
 import com.example.pruebas.R
 import com.example.pruebas.logic.data.MarvelChars
 import com.example.pruebas.databinding.MarvelCharactersBinding
+import com.example.pruebas.logic.data.getMarvelCharsDB
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.firestore.FieldValue
+import com.google.firebase.firestore.FirebaseFirestore
 import com.squareup.picasso.Picasso
 
 class MarvelAdapter(
@@ -17,20 +26,39 @@ class MarvelAdapter(
     class MarvelViewHolder (view: View) : RecyclerView.ViewHolder(view){
 
         private val binding: MarvelCharactersBinding=MarvelCharactersBinding.bind(view)
+
+        private lateinit var mediaPlayer: MediaPlayer
+        init {
+            mediaPlayer = MediaPlayer.create(itemView.context, R.raw.click)
+        }
+
+
+
         fun render(item : MarvelChars, fnClick:(MarvelChars)->Unit){
-//            println("Recibiendo a ${item.nombre}")
             Picasso.get().load(item.imagen).into(binding.imagen)
             binding.nombre.text=item.nombre
             binding.comic.text=item.comic
 
-            //Para mostrar el nombre del personaje
-//            binding.tarjeta.setOnClickListener{
-//                Snackbar.make(binding.imagen, item.nombre, Snackbar.LENGTH_SHORT).show()
-//            }
 
             //itemView se refiere a cualquier parte del elemento
             itemView.setOnClickListener{
                 fnClick(item)
+            }
+
+            binding.favorito.setOnClickListener {
+                val user = FirebaseAuth.getInstance().currentUser
+                user?.let {
+                    val userDocRef = FirebaseFirestore.getInstance().collection("users").document(user.uid)
+                    userDocRef.update("favoriteChar", FieldValue.arrayUnion(item.getMarvelCharsDB()))
+                        .addOnSuccessListener {
+                            Log.d("UCE", "Personaje guargado en Firestore")
+                        }
+                        .addOnFailureListener { e ->
+                            Log.d("UCE", "No se pudo guardar el personaje")
+                        }
+                }
+
+                mediaPlayer.start()
             }
         }
     }
@@ -43,6 +71,7 @@ class MarvelAdapter(
     override fun getItemCount(): Int=items.size
 
     override fun onBindViewHolder(holder: MarvelAdapter.MarvelViewHolder, position: Int) {
+
         holder.render(items[position],fnClick)
     }
 
@@ -55,5 +84,6 @@ class MarvelAdapter(
         this.items=newItems
         notifyDataSetChanged()
     }
+
 
 }

@@ -54,11 +54,9 @@ dependencies {
     implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.1.0"
 
     //Retrofit
-    //Nos permite acceder a la api pero necesitamos algo q nos ayude para trabajar con json xq manejamos objetos
-    //comunicacion con la api
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
 
-    //Usamos GSON (nos permite traducir del json a un objeto con el q trabajar)
+    //Usamos GSON
     implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
 
     // Corrutinas
@@ -71,25 +69,17 @@ dependencies {
     //Data Store
     implementation("androidx.datastore:datastore-preferences:1.0.0")
 
-
     //Room
     implementation "androidx.room:room-runtime:2.5.2"
     annotationProcessor "androidx.room:room-compiler:2.5.2"
 
-    // To use Kotlin annotation processing tool (kapt)
+    //Kapt
     kapt("androidx.room:room-compiler:2.5.2")
 
-    //Ubicacion
-    implementation("com.google.android.gms:play-services-location:21.0.1")
-
     //View Models
-    // Fragment
     implementation "androidx.fragment:fragment-ktx:1.6.1"
-    // Activity
     implementation "androidx.activity:activity-ktx:1.7.2"
-    // ViewModel
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.1"
-    // LiveData
     implementation "androidx.lifecycle:lifecycle-livedata-ktx:2.6.1"
 
     //Biometrica
@@ -104,9 +94,11 @@ dependencies {
 
     implementation "androidx.activity:activity:1.6.1"
 
+    //Glide
     implementation 'com.github.bumptech.glide:glide:4.12.0'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.12.0'
 
+    //Firebase Store, Storage, Auth
     implementation 'com.google.firebase:firebase-firestore:23.0.0'
     implementation 'com.google.firebase:firebase-storage:20.0.0'
     implementation 'com.google.firebase:firebase-auth:21.0.1'

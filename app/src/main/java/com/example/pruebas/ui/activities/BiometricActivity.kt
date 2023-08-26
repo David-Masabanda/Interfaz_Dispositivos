@@ -8,23 +8,19 @@ import android.os.Bundle
 import android.provider.Settings
 import android.text.Editable
 import android.view.View
-import androidx.activity.viewModels
 import androidx.biometric.BiometricManager
 import androidx.biometric.BiometricManager.Authenticators.BIOMETRIC_STRONG
 import androidx.biometric.BiometricManager.Authenticators.DEVICE_CREDENTIAL
 import androidx.biometric.BiometricPrompt
 
 import androidx.core.content.ContextCompat
-import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
 import com.example.pruebas.R
 import com.example.pruebas.databinding.ActivityBiometricBinding
-import com.example.pruebas.ui.viewmodels.BiometricViewModel
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.squareup.picasso.Picasso
-import kotlinx.coroutines.launch
 
 class BiometricActivity : AppCompatActivity() {
 

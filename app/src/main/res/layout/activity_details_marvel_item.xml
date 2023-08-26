@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/fondodes"
     tools:context=".ui.activities.DetailsMarvelItem">
 
     <TextView
@@ -12,20 +13,21 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:gravity="center"
-        android:textSize="16sp"
+        android:textSize="25sp"
         android:textStyle="bold"
-
+        android:text="Nombre"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.086" />
+        app:layout_constraintVertical_bias="0.042" />
 
     <ImageView
         android:id="@+id/imagenMarvel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
@@ -35,17 +37,7 @@
         tools:srcCompat="@tools:sample/avatars" />
 
 
-    <TextView
-        android:id="@+id/comicMarvel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="TextView"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imagenMarvel"
-        app:layout_constraintVertical_bias="0.105" />
+
 
 
 
@@ -53,21 +45,53 @@
     <androidx.cardview.widget.CardView
         android:id="@+id/resumenCaja"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/gradiente"
-        app:layout_constraintTop_toBottomOf="@+id/comicMarvel"
+        android:layout_height="250dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="20dp"
+        app:cardCornerRadius="15dp"
+        app:layout_constraintTop_toBottomOf="@+id/imagenMarvel"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintBottom_toBottomOf="parent">
 
-        <TextView
-            android:background="@drawable/gradiente"
-            android:id="@+id/resumenTexto"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            tools:layout_editor_absoluteX="-28dp"
-            tools:layout_editor_absoluteY="543dp" />
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/comicMarvel"
+                android:layout_width="wrap_content"
+                android:layout_height="55dp"
+                android:layout_gravity="center"
+                android:text="Comic"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:paddingTop="5dp"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.498"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/resumenCaja" />
+
+            <TextView
+                android:background="@drawable/gradiente5"
+                android:id="@+id/resumenTexto"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:text="Descripcion"
+                android:textSize="18sp"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:textColor="@color/white"
+                tools:layout_editor_absoluteX="-28dp"
+                tools:layout_editor_absoluteY="543dp" />
+        </LinearLayout>
+
+
 
     </androidx.cardview.widget.CardView>
 

@@ -9,26 +9,31 @@
     <androidx.cardview.widget.CardView
         android:id="@+id/cardView"
         android:layout_width="match_parent"
-        android:layout_height="130dp"
+        android:layout_height="150dp"
         tools:ignore="MissingConstraints"
         app:layout_constraintTop_toTopOf="parent">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
 
             <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="80dp"
-                android:src="@drawable/baseline_api"/>
+                android:id="@+id/gifMarvel"
+                android:layout_width="150dp"
+                android:layout_height="150dp"/>
 
             <TextView
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:text="Hola"
-                android:gravity="center"
-                android:textSize="30dp"/>
+                android:layout_width="wrap_content"
+                android:layout_height="80dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginLeft="15dp"
+                android:layout_marginTop="20dp"
+                android:text="Base Marvel"
+                android:textSize="30dp"
+                android:gravity="bottom"
+                android:textStyle="bold" />
+
         </LinearLayout>
 
     </androidx.cardview.widget.CardView>

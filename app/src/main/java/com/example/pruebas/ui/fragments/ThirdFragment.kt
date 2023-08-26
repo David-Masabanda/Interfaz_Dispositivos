@@ -15,11 +15,14 @@ import android.view.ViewGroup
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.example.pruebas.R
 import com.example.pruebas.databinding.FragmentThirdBinding
+import com.example.pruebas.logic.data.MarvelChars
 import com.example.pruebas.ui.activities.BiometricActivity
 import com.example.pruebas.ui.activities.EmptyActivity
+import com.example.pruebas.ui.adapters.MarvelAdapter
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
@@ -33,7 +36,8 @@ class ThirdFragment : Fragment() {
     private lateinit var auth: FirebaseAuth
     private lateinit var firestore: FirebaseFirestore
     private lateinit var storage: FirebaseStorage
-
+    
+    private lateinit var rvAdapter: MarvelAdapter
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -53,6 +57,12 @@ class ThirdFragment : Fragment() {
             layoutInflater, container, false
         )
 
+        rvAdapter = MarvelAdapter(emptyList()) { }
+        binding.rvMarvel.apply {
+            layoutManager = LinearLayoutManager(requireContext())
+            adapter = rvAdapter
+        }
+
         return binding.root
     }
 
@@ -70,6 +80,13 @@ class ThirdFragment : Fragment() {
 
         // Cargar datos del usuario
         loadUserData()
+        hideLayout()
+        loadFavoriteCharacters()
+
+        binding.rvSwipe.setOnRefreshListener {
+            loadFavoriteCharacters()
+            binding.rvSwipe.isRefreshing=false
+        }
 
         binding.btnCambiarImg.setOnClickListener {
             val options = arrayOf("Tomar foto", "Seleccionar de la galería")
@@ -132,6 +149,43 @@ class ThirdFragment : Fragment() {
         }
     }
 
+    private fun loadFavoriteCharacters() {
+        val user = auth.currentUser
+        if (user != null) {
+            val userDocRef = firestore.collection("users").document(user.uid)
+            userDocRef.get().addOnSuccessListener { documentSnapshot ->
+                if (documentSnapshot.exists()) {
+                    val userData = documentSnapshot.data
+                    val favoriteCharacters = userData?.get("favoriteChar") as? List<HashMap<String, Any>>
+
+                    if (favoriteCharacters != null && favoriteCharacters.isNotEmpty()) {
+                        val marvelCharsList = favoriteCharacters.map { characterData ->
+                            val id = characterData["id"] as? Int ?: 0
+                            val name = characterData["nombre"] as? String ?: ""
+                            val comic = characterData["comic"] as? String ?: ""
+                            val image = characterData["imagen"] as? String ?: ""
+                            val desc = characterData["desc"] as? String ?: ""
+                            MarvelChars(id, name, comic, image, desc)
+                        }
+
+                        // Actualizar el adaptador con los personajes favoritos
+                        rvAdapter.replaceListItemsAdapter(marvelCharsList)
+
+                        // Mostrar el RecyclerView y ocultar la vista de espera y la imagen de carga
+                        binding.rvMarvel.visibility = View.VISIBLE
+
+                    } else {
+                        // El usuario no tiene personajes favoritos, ocultar el RecyclerView
+                        showLayout()
+                    }
+                } else {
+                    // El usuario es nuevo y no tiene atributos en la base de datos, ocultar el RecyclerView
+                    showLayout()
+                }
+            }
+        }
+    }
+
 
     private val cameraResult= registerForActivityResult(ActivityResultContracts.StartActivityForResult()){
             result->
@@ -184,7 +238,15 @@ class ThirdFragment : Fragment() {
     }
 
 
+    private fun hideLayout() {
+        binding.esperando.visibility = View.GONE
+        binding.gifImageView.visibility = View.GONE
+    }
 
+    private fun showLayout() {
+        binding.esperando.visibility = View.VISIBLE
+        binding.gifImageView.visibility = View.VISIBLE
+    }
 
 
 }
